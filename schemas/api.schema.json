@@ -900,6 +900,36 @@
       ],
       "type": "object"
     },
+    "PostPlanBody": {
+      "properties": {
+        "task": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "task"
+      ],
+      "type": "object"
+    },
+    "PostPlanRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostPlanBody"
+        },
+        "response": {
+          "$ref": "#/$defs/AcceptedTurn"
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "ProjectChannelPath": {
       "properties": {
         "project_channel": {
@@ -1189,12 +1219,16 @@
     },
     "post_message": {
       "$ref": "#/$defs/PostMessageRoute"
+    },
+    "post_plan": {
+      "$ref": "#/$defs/PostPlanRoute"
     }
   },
   "required": [
     "get_projects",
     "get_files",
     "get_channels",
+    "post_plan",
     "post_message",
     "get_messages",
     "get_stream",

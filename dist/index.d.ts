@@ -166,6 +166,7 @@ export interface ApiTypes {
   get_stream: GetStreamRoute;
   post_kill: PostKillRoute;
   post_message: PostMessageRoute;
+  post_plan: PostPlanRoute;
   [k: string]: unknown;
 }
 /**
@@ -500,5 +501,23 @@ export interface PostMessageBody {
 export interface AcceptedTurn {
   seq: number;
   turn_id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostPlanRoute".
+ */
+export interface PostPlanRoute {
+  path: ProjectPath;
+  request: PostPlanBody;
+  response: AcceptedTurn;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostPlanBody".
+ */
+export interface PostPlanBody {
+  task: string;
   [k: string]: unknown;
 }
