@@ -161,14 +161,18 @@ export interface ApiTypes {
   get_channels: GetChannelsRoute;
   get_cron: GetCronRoute;
   get_dreams: GetDreamsRoute;
+  get_effort: GetEffortRoute;
   get_files: GetFilesRoute;
   get_memory: GetMemoryRoute;
   get_messages: GetMessagesRoute;
+  get_model: GetModelRoute;
   get_projects: GetProjectsRoute;
   get_stream: GetStreamRoute;
   post_cron: PostCronRoute;
+  post_effort: PostEffortRoute;
   post_kill: PostKillRoute;
   post_message: PostMessageRoute;
+  post_model: PostModelRoute;
   post_plan: PostPlanRoute;
   post_queue: PostQueueRoute;
   [k: string]: unknown;
@@ -322,6 +326,23 @@ export interface HostNode {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetEffortRoute".
+ */
+export interface GetEffortRoute {
+  path: ProjectPath;
+  response: EffortPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "EffortPayload".
+ */
+export interface EffortPayload {
+  effort?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetFilesRoute".
  */
 export interface GetFilesRoute {
@@ -462,6 +483,24 @@ export interface MessagesPayload {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetModelRoute".
+ */
+export interface GetModelRoute {
+  path: ProjectPath;
+  response: ModelPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ModelPayload".
+ */
+export interface ModelPayload {
+  harness: string;
+  model: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetProjectsRoute".
  */
 export interface GetProjectsRoute {
@@ -531,6 +570,24 @@ export interface PostCronBody {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostEffortRoute".
+ */
+export interface PostEffortRoute {
+  path: ProjectPath;
+  request: PostEffortBody;
+  response: EffortPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostEffortBody".
+ */
+export interface PostEffortBody {
+  effort: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "PostKillRoute".
  */
 export interface PostKillRoute {
@@ -574,6 +631,25 @@ export interface PostMessageBody {
 export interface AcceptedTurn {
   seq: number;
   turn_id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostModelRoute".
+ */
+export interface PostModelRoute {
+  path: ProjectPath;
+  request: PostModelBody;
+  response: ModelPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostModelBody".
+ */
+export interface PostModelBody {
+  harness: string;
+  model: string;
   [k: string]: unknown;
 }
 /**

@@ -300,6 +300,17 @@
       },
       "type": "object"
     },
+    "EffortPayload": {
+      "properties": {
+        "effort": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
     "EngineEvent": {
       "oneOf": [
         {
@@ -594,6 +605,21 @@
       ],
       "type": "object"
     },
+    "GetEffortRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "response": {
+          "$ref": "#/$defs/EffortPayload"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
     "GetFilesRoute": {
       "properties": {
         "path": {
@@ -643,6 +669,21 @@
       "required": [
         "path",
         "query",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetModelRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "response": {
+          "$ref": "#/$defs/ModelPayload"
+        }
+      },
+      "required": [
+        "path",
         "response"
       ],
       "type": "object"
@@ -927,6 +968,21 @@
       },
       "type": "object"
     },
+    "ModelPayload": {
+      "properties": {
+        "harness": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "harness",
+        "model"
+      ],
+      "type": "object"
+    },
     "PostCronBody": {
       "properties": {
         "id": {
@@ -958,6 +1014,36 @@
         },
         "response": {
           "$ref": "#/$defs/CronJobRecord"
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostEffortBody": {
+      "properties": {
+        "effort": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "effort"
+      ],
+      "type": "object"
+    },
+    "PostEffortRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostEffortBody"
+        },
+        "response": {
+          "$ref": "#/$defs/EffortPayload"
         }
       },
       "required": [
@@ -1033,6 +1119,40 @@
         }
       },
       "required": [
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostModelBody": {
+      "properties": {
+        "harness": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "harness",
+        "model"
+      ],
+      "type": "object"
+    },
+    "PostModelRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostModelBody"
+        },
+        "response": {
+          "$ref": "#/$defs/ModelPayload"
+        }
+      },
+      "required": [
+        "path",
         "request",
         "response"
       ],
@@ -1415,6 +1535,9 @@
     "get_dreams": {
       "$ref": "#/$defs/GetDreamsRoute"
     },
+    "get_effort": {
+      "$ref": "#/$defs/GetEffortRoute"
+    },
     "get_files": {
       "$ref": "#/$defs/GetFilesRoute"
     },
@@ -1423,6 +1546,9 @@
     },
     "get_messages": {
       "$ref": "#/$defs/GetMessagesRoute"
+    },
+    "get_model": {
+      "$ref": "#/$defs/GetModelRoute"
     },
     "get_projects": {
       "$ref": "#/$defs/GetProjectsRoute"
@@ -1433,11 +1559,17 @@
     "post_cron": {
       "$ref": "#/$defs/PostCronRoute"
     },
+    "post_effort": {
+      "$ref": "#/$defs/PostEffortRoute"
+    },
     "post_kill": {
       "$ref": "#/$defs/PostKillRoute"
     },
     "post_message": {
       "$ref": "#/$defs/PostMessageRoute"
+    },
+    "post_model": {
+      "$ref": "#/$defs/PostModelRoute"
     },
     "post_plan": {
       "$ref": "#/$defs/PostPlanRoute"
@@ -1452,6 +1584,10 @@
     "get_channels",
     "post_plan",
     "post_queue",
+    "get_effort",
+    "post_effort",
+    "get_model",
+    "post_model",
     "post_message",
     "get_messages",
     "get_stream",
