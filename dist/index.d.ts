@@ -157,17 +157,47 @@ export type TranscriptEntry =
 export type EngineSelection = "codex" | "opus" | "claude";
 
 export interface ApiTypes {
+  delete_cron: DeleteCronRoute;
   get_channels: GetChannelsRoute;
+  get_cron: GetCronRoute;
   get_dreams: GetDreamsRoute;
   get_files: GetFilesRoute;
   get_memory: GetMemoryRoute;
   get_messages: GetMessagesRoute;
   get_projects: GetProjectsRoute;
   get_stream: GetStreamRoute;
+  post_cron: PostCronRoute;
   post_kill: PostKillRoute;
   post_message: PostMessageRoute;
   post_plan: PostPlanRoute;
   post_queue: PostQueueRoute;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "DeleteCronRoute".
+ */
+export interface DeleteCronRoute {
+  path: CronDeletePath;
+  response: DeleteCronPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CronDeletePath".
+ */
+export interface CronDeletePath {
+  id: string;
+  project: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "DeleteCronPayload".
+ */
+export interface DeleteCronPayload {
+  deleted: boolean;
+  id: string;
   [k: string]: unknown;
 }
 /**
@@ -204,6 +234,28 @@ export interface ChannelEntry {
   display_name: string;
   id: string;
   private: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCronRoute".
+ */
+export interface GetCronRoute {
+  path: ProjectPath;
+  response: CronJobRecord[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CronJobRecord".
+ */
+export interface CronJobRecord {
+  enabled: boolean;
+  id: string;
+  last_run?: string | null;
+  message: string;
+  next_run?: string | null;
+  schedule: string;
   [k: string]: unknown;
 }
 /**
@@ -455,6 +507,26 @@ export interface GetStreamRoute {
  */
 export interface StreamQuery {
   last_seq?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCronRoute".
+ */
+export interface PostCronRoute {
+  path: ProjectPath;
+  request: PostCronBody;
+  response: CronJobRecord;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCronBody".
+ */
+export interface PostCronBody {
+  id?: string | null;
+  message: string;
+  schedule: string;
   [k: string]: unknown;
 }
 /**

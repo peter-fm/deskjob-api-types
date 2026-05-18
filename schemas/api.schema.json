@@ -141,6 +141,86 @@
       ],
       "type": "object"
     },
+    "CronDeletePath": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "project",
+        "id"
+      ],
+      "type": "object"
+    },
+    "CronJobRecord": {
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        },
+        "last_run": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "next_run": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "schedule": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "schedule",
+        "message",
+        "enabled"
+      ],
+      "type": "object"
+    },
+    "DeleteCronPayload": {
+      "properties": {
+        "deleted": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "deleted"
+      ],
+      "type": "object"
+    },
+    "DeleteCronRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/CronDeletePath"
+        },
+        "response": {
+          "$ref": "#/$defs/DeleteCronPayload"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
     "DreamEntry": {
       "properties": {
         "inputs": true,
@@ -473,6 +553,24 @@
         },
         "response": {
           "$ref": "#/$defs/ChannelsPayload"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetCronRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "response": {
+          "items": {
+            "$ref": "#/$defs/CronJobRecord"
+          },
+          "type": "array"
         }
       },
       "required": [
@@ -827,6 +925,46 @@
           ]
         }
       },
+      "type": "object"
+    },
+    "PostCronBody": {
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "schedule": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schedule",
+        "message"
+      ],
+      "type": "object"
+    },
+    "PostCronRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostCronBody"
+        },
+        "response": {
+          "$ref": "#/$defs/CronJobRecord"
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "response"
+      ],
       "type": "object"
     },
     "PostKillRoute": {
@@ -1265,8 +1403,14 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "properties": {
+    "delete_cron": {
+      "$ref": "#/$defs/DeleteCronRoute"
+    },
     "get_channels": {
       "$ref": "#/$defs/GetChannelsRoute"
+    },
+    "get_cron": {
+      "$ref": "#/$defs/GetCronRoute"
     },
     "get_dreams": {
       "$ref": "#/$defs/GetDreamsRoute"
@@ -1285,6 +1429,9 @@
     },
     "get_stream": {
       "$ref": "#/$defs/GetStreamRoute"
+    },
+    "post_cron": {
+      "$ref": "#/$defs/PostCronRoute"
     },
     "post_kill": {
       "$ref": "#/$defs/PostKillRoute"
@@ -1309,6 +1456,9 @@
     "get_messages",
     "get_stream",
     "post_kill",
+    "get_cron",
+    "post_cron",
+    "delete_cron",
     "get_memory",
     "get_dreams"
   ],
