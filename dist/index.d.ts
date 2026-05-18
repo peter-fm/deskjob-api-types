@@ -7,6 +7,16 @@
 
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GitStatus".
+ */
+export type GitStatus = "clean" | "modified" | "added" | "deleted" | "untracked";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FileNodeKind".
+ */
+export type FileNodeKind = "file" | "dir";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "MemoryItemKind".
  */
 export type MemoryItemKind =
@@ -149,6 +159,7 @@ export type EngineSelection = "codex" | "opus" | "claude";
 export interface ApiTypes {
   get_channels: GetChannelsRoute;
   get_dreams: GetDreamsRoute;
+  get_files: GetFilesRoute;
   get_memory: GetMemoryRoute;
   get_messages: GetMessagesRoute;
   get_projects: GetProjectsRoute;
@@ -253,6 +264,51 @@ export interface HostNode {
   api_bridge?: string | null;
   name: string;
   online: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetFilesRoute".
+ */
+export interface GetFilesRoute {
+  path: ProjectPath;
+  query: FilesQuery;
+  response: FilesResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FilesQuery".
+ */
+export interface FilesQuery {
+  depth?: number | null;
+  path?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FilesResponse".
+ */
+export interface FilesResponse {
+  generated_at: string;
+  project: string;
+  root: string;
+  tree: FileNode;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FileNode".
+ */
+export interface FileNode {
+  children?: FileNode[] | null;
+  git_status?: GitStatus | null;
+  kind: FileNodeKind;
+  modified_at?: string | null;
+  name: string;
+  path: string;
+  size?: number | null;
+  symlink?: boolean;
   [k: string]: unknown;
 }
 /**

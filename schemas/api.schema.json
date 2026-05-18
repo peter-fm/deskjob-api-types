@@ -362,6 +362,110 @@
       ],
       "type": "string"
     },
+    "FileNode": {
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/$defs/FileNode"
+          },
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "git_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GitStatus"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "$ref": "#/$defs/FileNodeKind"
+        },
+        "modified_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "size": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "symlink": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "path",
+        "kind"
+      ],
+      "type": "object"
+    },
+    "FileNodeKind": {
+      "enum": [
+        "file",
+        "dir"
+      ],
+      "type": "string"
+    },
+    "FilesQuery": {
+      "properties": {
+        "depth": {
+          "format": "uint",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "FilesResponse": {
+      "properties": {
+        "generated_at": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "root": {
+          "type": "string"
+        },
+        "tree": {
+          "$ref": "#/$defs/FileNode"
+        }
+      },
+      "required": [
+        "project",
+        "root",
+        "generated_at",
+        "tree"
+      ],
+      "type": "object"
+    },
     "GetChannelsRoute": {
       "properties": {
         "path": {
@@ -387,6 +491,25 @@
         }
       },
       "required": [
+        "query",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetFilesRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/FilesQuery"
+        },
+        "response": {
+          "$ref": "#/$defs/FilesResponse"
+        }
+      },
+      "required": [
+        "path",
         "query",
         "response"
       ],
@@ -455,6 +578,16 @@
         "response_frame"
       ],
       "type": "object"
+    },
+    "GitStatus": {
+      "enum": [
+        "clean",
+        "modified",
+        "added",
+        "deleted",
+        "untracked"
+      ],
+      "type": "string"
     },
     "HostNode": {
       "properties": {
@@ -1036,6 +1169,9 @@
     "get_dreams": {
       "$ref": "#/$defs/GetDreamsRoute"
     },
+    "get_files": {
+      "$ref": "#/$defs/GetFilesRoute"
+    },
     "get_memory": {
       "$ref": "#/$defs/GetMemoryRoute"
     },
@@ -1057,6 +1193,7 @@
   },
   "required": [
     "get_projects",
+    "get_files",
     "get_channels",
     "post_message",
     "get_messages",
