@@ -167,6 +167,7 @@ export interface ApiTypes {
   post_kill: PostKillRoute;
   post_message: PostMessageRoute;
   post_plan: PostPlanRoute;
+  post_queue: PostQueueRoute;
   [k: string]: unknown;
 }
 /**
@@ -519,5 +520,43 @@ export interface PostPlanRoute {
  */
 export interface PostPlanBody {
   task: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostQueueRoute".
+ */
+export interface PostQueueRoute {
+  path: ProjectPath;
+  request: PostQueueBody;
+  response: QueuePayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostQueueBody".
+ */
+export interface PostQueueBody {
+  message: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "QueuePayload".
+ */
+export interface QueuePayload {
+  project: string;
+  queue: QueueItemPayload;
+  queue_len: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "QueueItemPayload".
+ */
+export interface QueueItemPayload {
+  message: string;
+  position: number;
+  queued_at: string;
   [k: string]: unknown;
 }

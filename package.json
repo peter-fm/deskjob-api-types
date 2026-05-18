@@ -1,8 +1,8 @@
 {
   "deskjob": {
     "json_schema_to_typescript_version": "15.0.4",
-    "package_version": "0.3.0",
-    "schema_bundle_sha256": "b4207b58d975eddf519d2a9c77a8192946f26b7ec547edeb3d2f355371b5401c",
+    "package_version": "0.4.0",
+    "schema_bundle_sha256": "3d685d42630d531685c033f0103d9a691b7e64ec29918f962ec6b0a7531fc4fd",
     "schemars_version": "1.2.1"
   },
   "devDependencies": {
@@ -24,5 +24,5 @@
   "name": "@deskjob/api-types",
   "type": "module",
   "types": "./dist/index.d.ts",
-  "version": "0.3.0"
+  "version": "0.4.0"
 }

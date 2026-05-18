@@ -930,6 +930,36 @@
       ],
       "type": "object"
     },
+    "PostQueueBody": {
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "message"
+      ],
+      "type": "object"
+    },
+    "PostQueueRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostQueueBody"
+        },
+        "response": {
+          "$ref": "#/$defs/QueuePayload"
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "ProjectChannelPath": {
       "properties": {
         "project_channel": {
@@ -1018,6 +1048,48 @@
       "required": [
         "projects",
         "remote_errors"
+      ],
+      "type": "object"
+    },
+    "QueueItemPayload": {
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "position": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "queued_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "message",
+        "position",
+        "queued_at"
+      ],
+      "type": "object"
+    },
+    "QueuePayload": {
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "queue": {
+          "$ref": "#/$defs/QueueItemPayload"
+        },
+        "queue_len": {
+          "format": "uint",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "project",
+        "queue_len",
+        "queue"
       ],
       "type": "object"
     },
@@ -1222,6 +1294,9 @@
     },
     "post_plan": {
       "$ref": "#/$defs/PostPlanRoute"
+    },
+    "post_queue": {
+      "$ref": "#/$defs/PostQueueRoute"
     }
   },
   "required": [
@@ -1229,6 +1304,7 @@
     "get_files",
     "get_channels",
     "post_plan",
+    "post_queue",
     "post_message",
     "get_messages",
     "get_stream",
