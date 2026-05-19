@@ -99,6 +99,21 @@
         }
       ]
     },
+    "ApiUser": {
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/UserId"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "id"
+      ],
+      "type": "object"
+    },
     "ChannelEntry": {
       "properties": {
         "display_name": {
@@ -217,6 +232,25 @@
       },
       "required": [
         "path",
+        "response"
+      ],
+      "type": "object"
+    },
+    "DeleteShellRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/ShellStreamQuery"
+        },
+        "response": {
+          "$ref": "#/$defs/ShellKillPayload"
+        }
+      },
+      "required": [
+        "path",
+        "query",
         "response"
       ],
       "type": "object"
@@ -696,6 +730,29 @@
       },
       "required": [
         "response"
+      ],
+      "type": "object"
+    },
+    "GetShellStreamRoute": {
+      "properties": {
+        "client_frame": {
+          "$ref": "#/$defs/ShellClientFrame"
+        },
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/ShellStreamQuery"
+        },
+        "response_frame": {
+          "$ref": "#/$defs/ShellFrame"
+        }
+      },
+      "required": [
+        "path",
+        "query",
+        "response_frame",
+        "client_frame"
       ],
       "type": "object"
     },
@@ -1244,6 +1301,46 @@
       ],
       "type": "object"
     },
+    "PostShellBody": {
+      "properties": {
+        "cols": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "rows": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "cols",
+        "rows"
+      ],
+      "type": "object"
+    },
+    "PostShellRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostShellBody"
+        },
+        "response": {
+          "$ref": "#/$defs/ShellSession"
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "ProjectChannelPath": {
       "properties": {
         "project_channel": {
@@ -1374,6 +1471,348 @@
         "project",
         "queue_len",
         "queue"
+      ],
+      "type": "object"
+    },
+    "ShellClientFrame": {
+      "oneOf": [
+        {
+          "properties": {
+            "data": {
+              "type": "string"
+            },
+            "type": {
+              "const": "input",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "cols": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "rows": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": {
+              "const": "resize",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "cols",
+            "rows"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "kill",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ShellFrame": {
+      "oneOf": [
+        {
+          "properties": {
+            "cols": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "cwd": {
+              "type": "string"
+            },
+            "idle_timeout_seconds": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "project": {
+              "type": "string"
+            },
+            "rows": {
+              "format": "uint16",
+              "maximum": 65535,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "session_id": {
+              "type": "string"
+            },
+            "shell": {
+              "type": "string"
+            },
+            "type": {
+              "const": "ready",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "session_id",
+            "project",
+            "cols",
+            "rows",
+            "cwd",
+            "shell",
+            "idle_timeout_seconds"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "data": {
+              "type": "string"
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "session_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "output",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "session_id",
+            "data"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "code": {
+              "format": "int32",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "session_id": {
+              "type": "string"
+            },
+            "signal": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "const": "exit",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "session_id"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "session_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "error",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "session_id",
+            "message"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "dropped_bytes": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "session_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "overflow",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "session_id",
+            "dropped_bytes"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "ShellKillPayload": {
+      "properties": {
+        "killed": {
+          "type": "boolean"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/ShellSessionState"
+        }
+      },
+      "required": [
+        "session_id",
+        "killed",
+        "state"
+      ],
+      "type": "object"
+    },
+    "ShellSession": {
+      "properties": {
+        "cols": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "cwd": {
+          "type": "string"
+        },
+        "idle_timeout_seconds": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "last_activity_at": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "rows": {
+          "format": "uint16",
+          "maximum": 65535,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "session_id": {
+          "type": "string"
+        },
+        "shell": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/ShellSessionState"
+        },
+        "user": {
+          "$ref": "#/$defs/ApiUser"
+        }
+      },
+      "required": [
+        "session_id",
+        "project",
+        "user",
+        "state",
+        "created_at",
+        "last_activity_at",
+        "cols",
+        "rows",
+        "cwd",
+        "shell",
+        "idle_timeout_seconds"
+      ],
+      "type": "object"
+    },
+    "ShellSessionState": {
+      "enum": [
+        "running",
+        "exited",
+        "killed"
+      ],
+      "type": "string"
+    },
+    "ShellStreamQuery": {
+      "properties": {
+        "last_seq": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "session_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id"
       ],
       "type": "object"
     },
@@ -1545,12 +1984,19 @@
           "type": "object"
         }
       ]
+    },
+    "UserId": {
+      "format": "int64",
+      "type": "integer"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "properties": {
     "delete_cron": {
       "$ref": "#/$defs/DeleteCronRoute"
+    },
+    "delete_shell": {
+      "$ref": "#/$defs/DeleteShellRoute"
     },
     "get_channels": {
       "$ref": "#/$defs/GetChannelsRoute"
@@ -1579,6 +2025,9 @@
     "get_projects": {
       "$ref": "#/$defs/GetProjectsRoute"
     },
+    "get_shell_stream": {
+      "$ref": "#/$defs/GetShellStreamRoute"
+    },
     "get_stream": {
       "$ref": "#/$defs/GetStreamRoute"
     },
@@ -1605,6 +2054,9 @@
     },
     "post_queue": {
       "$ref": "#/$defs/PostQueueRoute"
+    },
+    "post_shell": {
+      "$ref": "#/$defs/PostShellRoute"
     }
   },
   "required": [
@@ -1621,6 +2073,9 @@
     "post_message",
     "get_messages",
     "get_stream",
+    "post_shell",
+    "get_shell_stream",
+    "delete_shell",
     "post_kill",
     "get_cron",
     "post_cron",

@@ -7,6 +7,11 @@
 
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ShellSessionState".
+ */
+export type ShellSessionState = "running" | "exited" | "killed";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GitStatus".
  */
 export type GitStatus = "clean" | "modified" | "added" | "deleted" | "untracked";
@@ -152,12 +157,85 @@ export type TranscriptEntry =
     };
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ShellClientFrame".
+ */
+export type ShellClientFrame =
+  | {
+      data: string;
+      type: "input";
+      [k: string]: unknown;
+    }
+  | {
+      cols: number;
+      rows: number;
+      type: "resize";
+      [k: string]: unknown;
+    }
+  | {
+      type: "kill";
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ShellFrame".
+ */
+export type ShellFrame =
+  | {
+      cols: number;
+      cwd: string;
+      idle_timeout_seconds: number;
+      project: string;
+      rows: number;
+      seq: number;
+      session_id: string;
+      shell: string;
+      type: "ready";
+      [k: string]: unknown;
+    }
+  | {
+      data: string;
+      seq: number;
+      session_id: string;
+      type: "output";
+      [k: string]: unknown;
+    }
+  | {
+      code?: number | null;
+      reason?: string | null;
+      seq: number;
+      session_id: string;
+      signal?: string | null;
+      type: "exit";
+      [k: string]: unknown;
+    }
+  | {
+      message: string;
+      seq: number;
+      session_id: string;
+      type: "error";
+      [k: string]: unknown;
+    }
+  | {
+      dropped_bytes: number;
+      seq: number;
+      session_id: string;
+      type: "overflow";
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "EngineSelection".
  */
 export type EngineSelection = "codex" | "opus" | "claude";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "UserId".
+ */
+export type UserId = number;
 
 export interface ApiTypes {
   delete_cron: DeleteCronRoute;
+  delete_shell: DeleteShellRoute;
   get_channels: GetChannelsRoute;
   get_cron: GetCronRoute;
   get_dreams: GetDreamsRoute;
@@ -167,6 +245,7 @@ export interface ApiTypes {
   get_messages: GetMessagesRoute;
   get_model: GetModelRoute;
   get_projects: GetProjectsRoute;
+  get_shell_stream: GetShellStreamRoute;
   get_stream: GetStreamRoute;
   post_cron: PostCronRoute;
   post_effort: PostEffortRoute;
@@ -176,6 +255,7 @@ export interface ApiTypes {
   post_plan: PostPlanRoute;
   post_project: PostProjectRoute;
   post_queue: PostQueueRoute;
+  post_shell: PostShellRoute;
   [k: string]: unknown;
 }
 /**
@@ -207,11 +287,12 @@ export interface DeleteCronPayload {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "GetChannelsRoute".
+ * via the `definition` "DeleteShellRoute".
  */
-export interface GetChannelsRoute {
+export interface DeleteShellRoute {
   path: ProjectPath;
-  response: ChannelsPayload;
+  query: ShellStreamQuery;
+  response: ShellKillPayload;
   [k: string]: unknown;
 }
 /**
@@ -220,6 +301,34 @@ export interface GetChannelsRoute {
  */
 export interface ProjectPath {
   project: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ShellStreamQuery".
+ */
+export interface ShellStreamQuery {
+  last_seq?: number | null;
+  session_id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ShellKillPayload".
+ */
+export interface ShellKillPayload {
+  killed: boolean;
+  session_id: string;
+  state: ShellSessionState;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetChannelsRoute".
+ */
+export interface GetChannelsRoute {
+  path: ProjectPath;
+  response: ChannelsPayload;
   [k: string]: unknown;
 }
 /**
@@ -533,6 +642,17 @@ export interface ProjectEntry {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetShellStreamRoute".
+ */
+export interface GetShellStreamRoute {
+  client_frame: ShellClientFrame;
+  path: ProjectPath;
+  query: ShellStreamQuery;
+  response_frame: ShellFrame;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetStreamRoute".
  */
 export interface GetStreamRoute {
@@ -724,5 +844,51 @@ export interface QueueItemPayload {
   message: string;
   position: number;
   queued_at: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostShellRoute".
+ */
+export interface PostShellRoute {
+  path: ProjectPath;
+  request: PostShellBody;
+  response: ShellSession;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostShellBody".
+ */
+export interface PostShellBody {
+  cols: number;
+  rows: number;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ShellSession".
+ */
+export interface ShellSession {
+  cols: number;
+  created_at: string;
+  cwd: string;
+  idle_timeout_seconds: number;
+  last_activity_at: string;
+  project: string;
+  rows: number;
+  session_id: string;
+  shell: string;
+  state: ShellSessionState;
+  user: ApiUser;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ApiUser".
+ */
+export interface ApiUser {
+  id: UserId;
+  name: string;
   [k: string]: unknown;
 }
