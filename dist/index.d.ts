@@ -104,7 +104,37 @@ export type EngineEvent =
       message: string;
       type: "error";
       [k: string]: unknown;
+    }
+  | {
+      correlation_id: string;
+      defaults_to: ApprovalDefault;
+      kind: ApprovalKind;
+      payload: unknown;
+      source: ApprovalSource;
+      type: "approval_request";
+      [k: string]: unknown;
     };
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ApprovalDefault".
+ */
+export type ApprovalDefault = "approve" | "decline" | "prompt";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ApprovalKind".
+ */
+export type ApprovalKind =
+  | "command_execution"
+  | "file_change"
+  | "apply_patch"
+  | "tool_call"
+  | "mcp_elicitation"
+  | "permissions";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ApprovalSource".
+ */
+export type ApprovalSource = "codex" | "claude";
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "TranscriptEntry".
@@ -224,6 +254,11 @@ export type ShellFrame =
     };
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ApprovalDecision".
+ */
+export type ApprovalDecision = "approve" | "decline";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "EngineSelection".
  */
 export type EngineSelection = "codex" | "opus" | "claude";
@@ -247,6 +282,7 @@ export interface ApiTypes {
   get_projects: GetProjectsRoute;
   get_shell_stream: GetShellStreamRoute;
   get_stream: GetStreamRoute;
+  post_approval: PostApprovalRoute;
   post_cron: PostCronRoute;
   post_effort: PostEffortRoute;
   post_kill: PostKillRoute;
@@ -676,6 +712,22 @@ export interface GetStreamRoute {
  */
 export interface StreamQuery {
   last_seq?: number | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostApprovalRoute".
+ */
+export interface PostApprovalRoute {
+  request: PostApprovalBody;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostApprovalBody".
+ */
+export interface PostApprovalBody {
+  decision: ApprovalDecision;
   [k: string]: unknown;
 }
 /**

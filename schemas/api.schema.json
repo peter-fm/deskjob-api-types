@@ -114,6 +114,39 @@
       ],
       "type": "object"
     },
+    "ApprovalDecision": {
+      "enum": [
+        "approve",
+        "decline"
+      ],
+      "type": "string"
+    },
+    "ApprovalDefault": {
+      "enum": [
+        "approve",
+        "decline",
+        "prompt"
+      ],
+      "type": "string"
+    },
+    "ApprovalKind": {
+      "enum": [
+        "command_execution",
+        "file_change",
+        "apply_patch",
+        "tool_call",
+        "mcp_elicitation",
+        "permissions"
+      ],
+      "type": "string"
+    },
+    "ApprovalSource": {
+      "enum": [
+        "codex",
+        "claude"
+      ],
+      "type": "string"
+    },
     "ChannelEntry": {
       "properties": {
         "display_name": {
@@ -474,6 +507,36 @@
           "required": [
             "type",
             "message"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "correlation_id": {
+              "type": "string"
+            },
+            "defaults_to": {
+              "$ref": "#/$defs/ApprovalDefault"
+            },
+            "kind": {
+              "$ref": "#/$defs/ApprovalKind"
+            },
+            "payload": true,
+            "source": {
+              "$ref": "#/$defs/ApprovalSource"
+            },
+            "type": {
+              "const": "approval_request",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "correlation_id",
+            "source",
+            "kind",
+            "payload",
+            "defaults_to"
           ],
           "type": "object"
         }
@@ -1041,6 +1104,28 @@
       "required": [
         "harness",
         "model"
+      ],
+      "type": "object"
+    },
+    "PostApprovalBody": {
+      "properties": {
+        "decision": {
+          "$ref": "#/$defs/ApprovalDecision"
+        }
+      },
+      "required": [
+        "decision"
+      ],
+      "type": "object"
+    },
+    "PostApprovalRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/PostApprovalBody"
+        }
+      },
+      "required": [
+        "request"
       ],
       "type": "object"
     },
@@ -2046,6 +2131,9 @@
     "get_stream": {
       "$ref": "#/$defs/GetStreamRoute"
     },
+    "post_approval": {
+      "$ref": "#/$defs/PostApprovalRoute"
+    },
     "post_cron": {
       "$ref": "#/$defs/PostCronRoute"
     },
@@ -2086,6 +2174,7 @@
     "get_model",
     "post_model",
     "post_message",
+    "post_approval",
     "get_messages",
     "get_stream",
     "post_shell",
