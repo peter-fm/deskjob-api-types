@@ -1188,6 +1188,32 @@
       ],
       "type": "object"
     },
+    "PostProjectBody": {
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    },
+    "PostProjectRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/PostProjectBody"
+        },
+        "response": {
+          "$ref": "#/$defs/ProjectEntry"
+        }
+      },
+      "required": [
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "PostQueueBody": {
       "properties": {
         "message": {
@@ -1574,12 +1600,16 @@
     "post_plan": {
       "$ref": "#/$defs/PostPlanRoute"
     },
+    "post_project": {
+      "$ref": "#/$defs/PostProjectRoute"
+    },
     "post_queue": {
       "$ref": "#/$defs/PostQueueRoute"
     }
   },
   "required": [
     "get_projects",
+    "post_project",
     "get_files",
     "get_channels",
     "post_plan",

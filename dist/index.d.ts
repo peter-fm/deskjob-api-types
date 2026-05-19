@@ -174,6 +174,7 @@ export interface ApiTypes {
   post_message: PostMessageRoute;
   post_model: PostModelRoute;
   post_plan: PostPlanRoute;
+  post_project: PostProjectRoute;
   post_queue: PostQueueRoute;
   [k: string]: unknown;
 }
@@ -668,6 +669,23 @@ export interface PostPlanRoute {
  */
 export interface PostPlanBody {
   task: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostProjectRoute".
+ */
+export interface PostProjectRoute {
+  request: PostProjectBody;
+  response: ProjectEntry;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostProjectBody".
+ */
+export interface PostProjectBody {
+  name: string;
   [k: string]: unknown;
 }
 /**
