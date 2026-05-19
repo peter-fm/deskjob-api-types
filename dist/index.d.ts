@@ -614,7 +614,16 @@ export interface ModelPayload {
  * via the `definition` "GetProjectsRoute".
  */
 export interface GetProjectsRoute {
+  query: ProjectsQuery;
   response: ProjectsPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ProjectsQuery".
+ */
+export interface ProjectsQuery {
+  workspace?: string | null;
   [k: string]: unknown;
 }
 /**
