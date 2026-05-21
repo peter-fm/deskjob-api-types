@@ -285,6 +285,7 @@ export interface ApiTypes {
   post_approval: PostApprovalRoute;
   post_cron: PostCronRoute;
   post_effort: PostEffortRoute;
+  post_interrupt: PostInterruptRoute;
   post_kill: PostKillRoute;
   post_message: PostMessageRoute;
   post_model: PostModelRoute;
@@ -766,6 +767,23 @@ export interface PostEffortRoute {
  */
 export interface PostEffortBody {
   effort: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostInterruptRoute".
+ */
+export interface PostInterruptRoute {
+  path: ProjectChannelPath;
+  response: InterruptPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "InterruptPayload".
+ */
+export interface InterruptPayload {
+  interrupted: boolean;
   [k: string]: unknown;
 }
 /**
