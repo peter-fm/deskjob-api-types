@@ -48,6 +48,12 @@ export type ApiStreamFrame =
       event: EngineEvent;
       project: string;
       seq: number;
+      /**
+       * Epoch milliseconds since the Unix epoch, assigned when the daemon
+       * publishes the first frame for this turn and reused for later frames
+       * in the same turn.
+       */
+      timestamp?: number | null;
       turn_id: string;
       type: "engine_event";
       [k: string]: unknown;
@@ -57,6 +63,11 @@ export type ApiStreamFrame =
       event: TranscriptEntry;
       project: string;
       seq: number;
+      /**
+       * Epoch milliseconds since the Unix epoch, preserving the original
+       * transcript/spool event timestamp rather than the replay call time.
+       */
+      timestamp?: number | null;
       turn_id: string;
       type: "transcript_entry";
       [k: string]: unknown;
@@ -69,6 +80,11 @@ export type ApiStreamFrame =
       project: string;
       requested_last_seq: number;
       seq: number;
+      /**
+       * Epoch milliseconds since the Unix epoch for the latest known frame
+       * at the point the replay gap was reported.
+       */
+      timestamp?: number | null;
       turn_id: string;
       type: "replay_gap";
       [k: string]: unknown;
