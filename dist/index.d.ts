@@ -300,6 +300,7 @@ export interface ApiTypes {
   get_memory: GetMemoryRoute;
   get_messages: GetMessagesRoute;
   get_model: GetModelRoute;
+  get_project: GetProjectRoute;
   get_projects: GetProjectsRoute;
   get_shell_stream: GetShellStreamRoute;
   get_stream: GetStreamRoute;
@@ -698,6 +699,30 @@ export interface ModelPayload {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetProjectRoute".
+ */
+export interface GetProjectRoute {
+  path: ProjectPath;
+  response: ProjectEntry;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ProjectEntry".
+ */
+export interface ProjectEntry {
+  agent_name?: string | null;
+  display_name: string;
+  host_node: HostNode;
+  id: string;
+  is_external: boolean;
+  owner: string;
+  qualified_name: string;
+  status: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetProjectsRoute".
  */
 export interface GetProjectsRoute {
@@ -720,20 +745,6 @@ export interface ProjectsQuery {
 export interface ProjectsPayload {
   projects: ProjectEntry[];
   remote_errors: unknown[];
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "ProjectEntry".
- */
-export interface ProjectEntry {
-  display_name: string;
-  host_node: HostNode;
-  id: string;
-  is_external: boolean;
-  owner: string;
-  qualified_name: string;
-  status: string;
   [k: string]: unknown;
 }
 /**

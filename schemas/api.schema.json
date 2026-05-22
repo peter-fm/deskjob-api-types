@@ -911,6 +911,21 @@
       ],
       "type": "object"
     },
+    "GetProjectRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "response": {
+          "$ref": "#/$defs/ProjectEntry"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
     "GetProjectsRoute": {
       "properties": {
         "query": {
@@ -1595,6 +1610,12 @@
     },
     "ProjectEntry": {
       "properties": {
+        "agent_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "display_name": {
           "type": "string"
         },
@@ -2293,6 +2314,9 @@
     "get_model": {
       "$ref": "#/$defs/GetModelRoute"
     },
+    "get_project": {
+      "$ref": "#/$defs/GetProjectRoute"
+    },
     "get_projects": {
       "$ref": "#/$defs/GetProjectsRoute"
     },
@@ -2338,6 +2362,7 @@
   },
   "required": [
     "get_projects",
+    "get_project",
     "post_project",
     "get_files",
     "get_file_content",
