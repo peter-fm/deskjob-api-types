@@ -60,6 +60,18 @@ export type ApiStreamFrame =
       turn_id: string;
       type: "transcript_entry";
       [k: string]: unknown;
+    }
+  | {
+      channel_id: string;
+      event: ReplayGapEvent;
+      latest_seq: number;
+      oldest_available_seq?: number | null;
+      project: string;
+      requested_last_seq: number;
+      seq: number;
+      turn_id: string;
+      type: "replay_gap";
+      [k: string]: unknown;
     };
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
@@ -187,6 +199,14 @@ export type TranscriptEntry =
     };
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ReplayGapEvent".
+ */
+export type ReplayGapEvent = {
+  type: "replay_gap";
+  [k: string]: unknown;
+};
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "ShellClientFrame".
  */
 export type ShellClientFrame =
@@ -275,6 +295,7 @@ export interface ApiTypes {
   get_cron: GetCronRoute;
   get_dreams: GetDreamsRoute;
   get_effort: GetEffortRoute;
+  get_file_content: GetFileContentRoute;
   get_files: GetFilesRoute;
   get_memory: GetMemoryRoute;
   get_messages: GetMessagesRoute;
@@ -384,6 +405,8 @@ export interface ChannelsPayload {
 export interface ChannelEntry {
   display_name: string;
   id: string;
+  last_event_at?: string | null;
+  last_event_seq: number;
   private: boolean;
   [k: string]: unknown;
 }
@@ -486,6 +509,33 @@ export interface GetEffortRoute {
  */
 export interface EffortPayload {
   effort?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetFileContentRoute".
+ */
+export interface GetFileContentRoute {
+  path: ProjectPath;
+  query: FileContentQuery;
+  response: FileContentResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FileContentQuery".
+ */
+export interface FileContentQuery {
+  max_bytes?: number | null;
+  path?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FileContentResponse".
+ */
+export interface FileContentResponse {
+  body: number[];
   [k: string]: unknown;
 }
 /**

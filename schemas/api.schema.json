@@ -96,6 +96,65 @@
             "event"
           ],
           "type": "object"
+        },
+        {
+          "properties": {
+            "channel_id": {
+              "examples": [
+                "public:default",
+                "dm:agent:pete"
+              ],
+              "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
+              "type": "string"
+            },
+            "event": {
+              "$ref": "#/$defs/ReplayGapEvent"
+            },
+            "latest_seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "oldest_available_seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "project": {
+              "type": "string"
+            },
+            "requested_last_seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "turn_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "replay_gap",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "project",
+            "channel_id",
+            "turn_id",
+            "event",
+            "requested_last_seq",
+            "latest_seq"
+          ],
+          "type": "object"
         }
       ]
     },
@@ -160,6 +219,17 @@
           "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
           "type": "string"
         },
+        "last_event_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last_event_seq": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
         "private": {
           "type": "boolean"
         }
@@ -167,7 +237,8 @@
       "required": [
         "id",
         "display_name",
-        "private"
+        "private",
+        "last_event_seq"
       ],
       "type": "object"
     },
@@ -550,6 +621,42 @@
       ],
       "type": "string"
     },
+    "FileContentQuery": {
+      "properties": {
+        "max_bytes": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "FileContentResponse": {
+      "properties": {
+        "body": {
+          "items": {
+            "format": "uint8",
+            "maximum": 255,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "body"
+      ],
+      "type": "object"
+    },
     "FileNode": {
       "properties": {
         "children": {
@@ -713,6 +820,25 @@
       },
       "required": [
         "path",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetFileContentRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/FileContentQuery"
+        },
+        "response": {
+          "$ref": "#/$defs/FileContentResponse"
+        }
+      },
+      "required": [
+        "path",
+        "query",
         "response"
       ],
       "type": "object"
@@ -1600,6 +1726,22 @@
       ],
       "type": "object"
     },
+    "ReplayGapEvent": {
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "const": "replay_gap",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
     "ShellClientFrame": {
       "oneOf": [
         {
@@ -2136,6 +2278,9 @@
     "get_effort": {
       "$ref": "#/$defs/GetEffortRoute"
     },
+    "get_file_content": {
+      "$ref": "#/$defs/GetFileContentRoute"
+    },
     "get_files": {
       "$ref": "#/$defs/GetFilesRoute"
     },
@@ -2195,6 +2340,7 @@
     "get_projects",
     "post_project",
     "get_files",
+    "get_file_content",
     "get_channels",
     "post_plan",
     "post_queue",
