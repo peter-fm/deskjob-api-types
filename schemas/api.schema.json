@@ -179,6 +179,36 @@
             "latest_seq"
           ],
           "type": "object"
+        },
+        {
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "args": true,
+            "project": {
+              "type": "string"
+            },
+            "request_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "view_action_request",
+              "type": "string"
+            },
+            "view_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "request_id",
+            "view_id",
+            "project",
+            "action",
+            "args"
+          ],
+          "type": "object"
         }
       ]
     },
@@ -1283,6 +1313,17 @@
       ],
       "type": "object"
     },
+    "OkPayload": {
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "type": "object"
+    },
     "PostApprovalBody": {
       "properties": {
         "decision": {
@@ -1616,6 +1657,66 @@
       },
       "required": [
         "path",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostViewActionResultRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/ViewActionResult"
+        },
+        "response": {
+          "$ref": "#/$defs/OkPayload"
+        }
+      },
+      "required": [
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostViewRegisterRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/ViewRegisterRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/OkPayload"
+        }
+      },
+      "required": [
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostViewStateRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/ViewStatePush"
+        },
+        "response": {
+          "$ref": "#/$defs/OkPayload"
+        }
+      },
+      "required": [
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostViewUnregisterRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/ViewUnregisterRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/OkPayload"
+        }
+      },
+      "required": [
         "request",
         "response"
       ],
@@ -2301,6 +2402,80 @@
     "UserId": {
       "format": "int64",
       "type": "integer"
+    },
+    "ViewActionResult": {
+      "properties": {
+        "error": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ok": {
+          "type": "boolean"
+        },
+        "request_id": {
+          "type": "string"
+        },
+        "view_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "view_id",
+        "ok"
+      ],
+      "type": "object"
+    },
+    "ViewRegisterRequest": {
+      "properties": {
+        "capabilities": true,
+        "project": {
+          "type": "string"
+        },
+        "view_id": {
+          "type": "string"
+        },
+        "view_name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view_id",
+        "project",
+        "view_name",
+        "capabilities"
+      ],
+      "type": "object"
+    },
+    "ViewStatePush": {
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "state": true,
+        "view_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view_id",
+        "project",
+        "state"
+      ],
+      "type": "object"
+    },
+    "ViewUnregisterRequest": {
+      "properties": {
+        "view_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view_id"
+      ],
+      "type": "object"
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -2382,6 +2557,18 @@
     },
     "post_shell": {
       "$ref": "#/$defs/PostShellRoute"
+    },
+    "post_view_action_result": {
+      "$ref": "#/$defs/PostViewActionResultRoute"
+    },
+    "post_view_register": {
+      "$ref": "#/$defs/PostViewRegisterRoute"
+    },
+    "post_view_state": {
+      "$ref": "#/$defs/PostViewStateRoute"
+    },
+    "post_view_unregister": {
+      "$ref": "#/$defs/PostViewUnregisterRoute"
     }
   },
   "required": [
@@ -2399,6 +2586,10 @@
     "post_model",
     "post_message",
     "post_approval",
+    "post_view_register",
+    "post_view_unregister",
+    "post_view_state",
+    "post_view_action_result",
     "get_messages",
     "get_stream",
     "post_shell",

@@ -88,6 +88,15 @@ export type ApiStreamFrame =
       turn_id: string;
       type: "replay_gap";
       [k: string]: unknown;
+    }
+  | {
+      action: string;
+      args: unknown;
+      project: string;
+      request_id: string;
+      type: "view_action_request";
+      view_id: string;
+      [k: string]: unknown;
     };
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
@@ -331,6 +340,10 @@ export interface ApiTypes {
   post_project: PostProjectRoute;
   post_queue: PostQueueRoute;
   post_shell: PostShellRoute;
+  post_view_action_result: PostViewActionResultRoute;
+  post_view_register: PostViewRegisterRoute;
+  post_view_state: PostViewStateRoute;
+  post_view_unregister: PostViewUnregisterRoute;
   [k: string]: unknown;
 }
 /**
@@ -1046,5 +1059,89 @@ export interface ShellSession {
 export interface ApiUser {
   id: UserId;
   name: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostViewActionResultRoute".
+ */
+export interface PostViewActionResultRoute {
+  request: ViewActionResult;
+  response: OkPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ViewActionResult".
+ */
+export interface ViewActionResult {
+  error?: string | null;
+  ok: boolean;
+  request_id: string;
+  view_id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "OkPayload".
+ */
+export interface OkPayload {
+  ok: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostViewRegisterRoute".
+ */
+export interface PostViewRegisterRoute {
+  request: ViewRegisterRequest;
+  response: OkPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ViewRegisterRequest".
+ */
+export interface ViewRegisterRequest {
+  capabilities: unknown;
+  project: string;
+  view_id: string;
+  view_name: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostViewStateRoute".
+ */
+export interface PostViewStateRoute {
+  request: ViewStatePush;
+  response: OkPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ViewStatePush".
+ */
+export interface ViewStatePush {
+  project: string;
+  state: unknown;
+  view_id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostViewUnregisterRoute".
+ */
+export interface PostViewUnregisterRoute {
+  request: ViewUnregisterRequest;
+  response: OkPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ViewUnregisterRequest".
+ */
+export interface ViewUnregisterRequest {
+  view_id: string;
   [k: string]: unknown;
 }

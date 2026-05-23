@@ -14,4 +14,4 @@ Check for drift without writing files:
 cargo run -p deskjob-api-types --bin gen-api-types -- --check
 ```
 
-The package is intended for git dependency consumption in the first canvas integration phase.
+The package is intended for git dependency consumption by API bridge clients, including canvas integrations.
