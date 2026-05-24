@@ -260,6 +260,9 @@
       ],
       "type": "string"
     },
+    "BinaryResponseBody": {
+      "type": "object"
+    },
     "ChannelEntry": {
       "properties": {
         "display_name": {
@@ -675,39 +678,17 @@
       ],
       "type": "string"
     },
-    "FileContentQuery": {
-      "properties": {
-        "max_bytes": {
-          "format": "uint64",
-          "minimum": 0,
-          "type": [
-            "integer",
-            "null"
-          ]
-        },
-        "path": {
-          "type": [
-            "string",
-            "null"
-          ]
-        }
-      },
+    "FileContentWriteRequest": {
       "type": "object"
     },
-    "FileContentResponse": {
+    "FileContentWriteResponse": {
       "properties": {
-        "body": {
-          "items": {
-            "format": "uint8",
-            "maximum": 255,
-            "minimum": 0,
-            "type": "integer"
-          },
-          "type": "array"
+        "ok": {
+          "type": "boolean"
         }
       },
       "required": [
-        "body"
+        "ok"
       ],
       "type": "object"
     },
@@ -878,16 +859,35 @@
       ],
       "type": "object"
     },
+    "GetFileContentQuery": {
+      "properties": {
+        "max_bytes": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
     "GetFileContentRoute": {
       "properties": {
         "path": {
           "$ref": "#/$defs/ProjectPath"
         },
         "query": {
-          "$ref": "#/$defs/FileContentQuery"
+          "$ref": "#/$defs/GetFileContentQuery"
         },
         "response": {
-          "$ref": "#/$defs/FileContentResponse"
+          "$ref": "#/$defs/BinaryResponseBody"
         }
       },
       "required": [
@@ -1830,6 +1830,40 @@
       },
       "type": "object"
     },
+    "PutFileContentQuery": {
+      "properties": {
+        "path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "PutFileContentRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/PutFileContentQuery"
+        },
+        "request": {
+          "$ref": "#/$defs/FileContentWriteRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/FileContentWriteResponse"
+        }
+      },
+      "required": [
+        "path",
+        "query",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "QueueItemPayload": {
       "properties": {
         "message": {
@@ -2569,6 +2603,9 @@
     },
     "post_view_unregister": {
       "$ref": "#/$defs/PostViewUnregisterRoute"
+    },
+    "put_file_content": {
+      "$ref": "#/$defs/PutFileContentRoute"
     }
   },
   "required": [
@@ -2577,6 +2614,7 @@
     "post_project",
     "get_files",
     "get_file_content",
+    "put_file_content",
     "get_channels",
     "post_plan",
     "post_queue",

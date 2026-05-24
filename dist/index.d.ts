@@ -344,6 +344,7 @@ export interface ApiTypes {
   post_view_register: PostViewRegisterRoute;
   post_view_state: PostViewStateRoute;
   post_view_unregister: PostViewUnregisterRoute;
+  put_file_content: PutFileContentRoute;
   [k: string]: unknown;
 }
 /**
@@ -547,27 +548,24 @@ export interface EffortPayload {
  */
 export interface GetFileContentRoute {
   path: ProjectPath;
-  query: FileContentQuery;
-  response: FileContentResponse;
+  query: GetFileContentQuery;
+  response: BinaryResponseBody;
   [k: string]: unknown;
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "FileContentQuery".
+ * via the `definition` "GetFileContentQuery".
  */
-export interface FileContentQuery {
+export interface GetFileContentQuery {
   max_bytes?: number | null;
   path?: string | null;
   [k: string]: unknown;
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "FileContentResponse".
+ * via the `definition` "BinaryResponseBody".
  */
-export interface FileContentResponse {
-  body: number[];
-  [k: string]: unknown;
-}
+export type BinaryResponseBody = Blob;
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetFilesRoute".
@@ -1143,5 +1141,37 @@ export interface PostViewUnregisterRoute {
  */
 export interface ViewUnregisterRequest {
   view_id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PutFileContentRoute".
+ */
+export interface PutFileContentRoute {
+  path: ProjectPath;
+  query: PutFileContentQuery;
+  request: FileContentWriteRequest;
+  response: FileContentWriteResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PutFileContentQuery".
+ */
+export interface PutFileContentQuery {
+  path?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FileContentWriteRequest".
+ */
+export type FileContentWriteRequest = Blob | ArrayBuffer | Uint8Array;
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "FileContentWriteResponse".
+ */
+export interface FileContentWriteResponse {
+  ok: boolean;
   [k: string]: unknown;
 }
