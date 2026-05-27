@@ -105,6 +105,15 @@ export type ApiStreamFrame =
       type: "view_build_status_changed";
       view_name: string;
       [k: string]: unknown;
+    }
+  | {
+      build: CanvasBuildResult;
+      draft_id: string;
+      project: string;
+      revision: number;
+      source_hash: string;
+      type: "view_draft_ready";
+      [k: string]: unknown;
     };
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
@@ -327,6 +336,8 @@ export type UserId = number;
 export type BuildMode = "preview" | "release";
 
 export interface ApiTypes {
+  canvas_emit_view_draft_tool: CanvasEmitViewDraftToolRoute;
+  delete_canvas_pin: DeleteCanvasPinRoute;
   delete_cron: DeleteCronRoute;
   delete_shell: DeleteShellRoute;
   get_canvas_draft: GetCanvasDraftRoute;
@@ -370,6 +381,118 @@ export interface ApiTypes {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasEmitViewDraftToolRoute".
+ */
+export interface CanvasEmitViewDraftToolRoute {
+  request: CanvasEmitViewDraftTool;
+  response: PutCanvasDraftResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasEmitViewDraftTool".
+ */
+export interface CanvasEmitViewDraftTool {
+  build_mode?: "preview" | "release";
+  draft_id?: string;
+  project: string;
+  source: CanvasSource;
+  typecheck?: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasSource".
+ */
+export interface CanvasSource {
+  entry: string;
+  files: {
+    [k: string]: string;
+  };
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PutCanvasDraftResponse".
+ */
+export interface PutCanvasDraftResponse {
+  build: CanvasBuildResult;
+  draft_id: string;
+  revision: number;
+  source_hash: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasBuildResult".
+ */
+export interface CanvasBuildResult {
+  bundle_hash?: string | null;
+  bundle_url?: string | null;
+  diagnostics?: CanvasBuildDiagnostic[];
+  duration_ms?: number | null;
+  runtime_abi?: string | null;
+  status: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasBuildDiagnostic".
+ */
+export interface CanvasBuildDiagnostic {
+  column?: number | null;
+  file?: string | null;
+  line?: number | null;
+  message: string;
+  severity: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "DeleteCanvasPinRoute".
+ */
+export interface DeleteCanvasPinRoute {
+  path: ProjectPath;
+  query: DeleteCanvasPinQuery;
+  response: PostCanvasPinResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ProjectPath".
+ */
+export interface ProjectPath {
+  project: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "DeleteCanvasPinQuery".
+ */
+export interface DeleteCanvasPinQuery {
+  slot?: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasPinResponse".
+ */
+export interface PostCanvasPinResponse {
+  ok: boolean;
+  pins: CanvasPinEntry[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasPinEntry".
+ */
+export interface CanvasPinEntry {
+  slot: string;
+  view: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "DeleteCronRoute".
  */
 export interface DeleteCronRoute {
@@ -403,14 +526,6 @@ export interface DeleteShellRoute {
   path: ProjectPath;
   query: ShellStreamQuery;
   response: ShellKillPayload;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "ProjectPath".
- */
-export interface ProjectPath {
-  project: string;
   [k: string]: unknown;
 }
 /**
@@ -462,42 +577,6 @@ export interface GetCanvasDraftResponse {
   source?: CanvasSource | null;
   source_hash: string;
   updated_at: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "CanvasBuildResult".
- */
-export interface CanvasBuildResult {
-  bundle_hash?: string | null;
-  bundle_url?: string | null;
-  diagnostics?: CanvasBuildDiagnostic[];
-  duration_ms?: number | null;
-  runtime_abi?: string | null;
-  status: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "CanvasBuildDiagnostic".
- */
-export interface CanvasBuildDiagnostic {
-  column?: number | null;
-  file?: string | null;
-  line?: number | null;
-  message: string;
-  severity: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "CanvasSource".
- */
-export interface CanvasSource {
-  entry: string;
-  files: {
-    [k: string]: string;
-  };
   [k: string]: unknown;
 }
 /**
@@ -1019,24 +1098,6 @@ export interface PostCanvasPinRequest {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "PostCanvasPinResponse".
- */
-export interface PostCanvasPinResponse {
-  ok: boolean;
-  pins: CanvasPinEntry[];
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "CanvasPinEntry".
- */
-export interface CanvasPinEntry {
-  slot: string;
-  view: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "PostCanvasViewBuildRoute".
  */
 export interface PostCanvasViewBuildRoute {
@@ -1441,17 +1502,6 @@ export interface PutCanvasDraftRequest {
 export interface CanvasBuildOptions {
   mode?: "preview" | "release";
   typecheck?: boolean;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "PutCanvasDraftResponse".
- */
-export interface PutCanvasDraftResponse {
-  build: CanvasBuildResult;
-  draft_id: string;
-  revision: number;
-  source_hash: string;
   [k: string]: unknown;
 }
 /**

@@ -237,6 +237,40 @@
             "build"
           ],
           "type": "object"
+        },
+        {
+          "properties": {
+            "build": {
+              "$ref": "#/$defs/CanvasBuildResult"
+            },
+            "draft_id": {
+              "type": "string"
+            },
+            "project": {
+              "type": "string"
+            },
+            "revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "source_hash": {
+              "type": "string"
+            },
+            "type": {
+              "const": "view_draft_ready",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "project",
+            "draft_id",
+            "revision",
+            "source_hash",
+            "build"
+          ],
+          "type": "object"
         }
       ]
     },
@@ -389,6 +423,48 @@
       },
       "required": [
         "status"
+      ],
+      "type": "object"
+    },
+    "CanvasEmitViewDraftTool": {
+      "properties": {
+        "build_mode": {
+          "$ref": "#/$defs/BuildMode",
+          "default": "preview"
+        },
+        "draft_id": {
+          "default": "draft",
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/CanvasSource"
+        },
+        "typecheck": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "project",
+        "source"
+      ],
+      "type": "object"
+    },
+    "CanvasEmitViewDraftToolRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/CanvasEmitViewDraftTool"
+        },
+        "response": {
+          "$ref": "#/$defs/PutCanvasDraftResponse"
+        }
+      },
+      "required": [
+        "request",
+        "response"
       ],
       "type": "object"
     },
@@ -611,6 +687,34 @@
         "schedule",
         "message",
         "enabled"
+      ],
+      "type": "object"
+    },
+    "DeleteCanvasPinQuery": {
+      "properties": {
+        "slot": {
+          "default": "main",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "DeleteCanvasPinRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/DeleteCanvasPinQuery"
+        },
+        "response": {
+          "$ref": "#/$defs/PostCanvasPinResponse"
+        }
+      },
+      "required": [
+        "path",
+        "query",
+        "response"
       ],
       "type": "object"
     },
@@ -3176,6 +3280,12 @@
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "properties": {
+    "canvas_emit_view_draft_tool": {
+      "$ref": "#/$defs/CanvasEmitViewDraftToolRoute"
+    },
+    "delete_canvas_pin": {
+      "$ref": "#/$defs/DeleteCanvasPinRoute"
+    },
     "delete_cron": {
       "$ref": "#/$defs/DeleteCronRoute"
     },
@@ -3322,6 +3432,8 @@
     "post_canvas_view_build",
     "get_canvas_view_bundle",
     "post_canvas_pin",
+    "delete_canvas_pin",
+    "canvas_emit_view_draft_tool",
     "get_messages",
     "get_stream",
     "post_shell",
