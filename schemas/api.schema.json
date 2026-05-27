@@ -209,6 +209,34 @@
             "args"
           ],
           "type": "object"
+        },
+        {
+          "properties": {
+            "build": {
+              "$ref": "#/$defs/ViewBuildStatus"
+            },
+            "build_id": {
+              "type": "string"
+            },
+            "project": {
+              "type": "string"
+            },
+            "type": {
+              "const": "view_build_status_changed",
+              "type": "string"
+            },
+            "view_name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "project",
+            "view_name",
+            "build_id",
+            "build"
+          ],
+          "type": "object"
         }
       ]
     },
@@ -261,6 +289,225 @@
       "type": "string"
     },
     "BinaryResponseBody": {
+      "type": "object"
+    },
+    "BuildMode": {
+      "enum": [
+        "preview",
+        "release"
+      ],
+      "type": "string"
+    },
+    "CanvasBuildDiagnostic": {
+      "properties": {
+        "column": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "line": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "severity",
+        "message"
+      ],
+      "type": "object"
+    },
+    "CanvasBuildOptions": {
+      "properties": {
+        "mode": {
+          "$ref": "#/$defs/BuildMode",
+          "default": "preview"
+        },
+        "typecheck": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "CanvasBuildResult": {
+      "properties": {
+        "bundle_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bundle_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "diagnostics": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/CanvasBuildDiagnostic"
+          },
+          "type": "array"
+        },
+        "duration_ms": {
+          "format": "uint128",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "runtime_abi": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "type": "object"
+    },
+    "CanvasPinEntry": {
+      "properties": {
+        "slot": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "slot",
+        "view"
+      ],
+      "type": "object"
+    },
+    "CanvasSource": {
+      "properties": {
+        "entry": {
+          "type": "string"
+        },
+        "files": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "entry",
+        "files"
+      ],
+      "type": "object"
+    },
+    "CanvasViewBundlePath": {
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "bundle": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "author",
+        "name",
+        "bundle"
+      ],
+      "type": "object"
+    },
+    "CanvasViewEntry": {
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "bundle_hash": {
+          "type": "string"
+        },
+        "bundle_url": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "runtime_abi": {
+          "type": "string"
+        },
+        "source_hash": {
+          "type": "string"
+        },
+        "thumbnail_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view",
+        "author",
+        "name",
+        "source_hash",
+        "bundle_hash",
+        "bundle_url",
+        "runtime_abi",
+        "updated_at"
+      ],
+      "type": "object"
+    },
+    "CanvasViewPath": {
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "author",
+        "name"
+      ],
       "type": "object"
     },
     "ChannelEntry": {
@@ -793,6 +1040,145 @@
         "root",
         "generated_at",
         "tree"
+      ],
+      "type": "object"
+    },
+    "GetCanvasDraftQuery": {
+      "properties": {
+        "include_source": {
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "GetCanvasDraftResponse": {
+      "properties": {
+        "build": {
+          "$ref": "#/$defs/CanvasBuildResult"
+        },
+        "draft_id": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "revision": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanvasSource"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "source_hash": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "draft_id",
+        "project",
+        "revision",
+        "source_hash",
+        "build",
+        "updated_at"
+      ],
+      "type": "object"
+    },
+    "GetCanvasDraftRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/GetCanvasDraftQuery"
+        },
+        "response": {
+          "$ref": "#/$defs/GetCanvasDraftResponse"
+        }
+      },
+      "required": [
+        "path",
+        "query",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetCanvasViewBundleRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/CanvasViewBundlePath"
+        },
+        "response": {
+          "$ref": "#/$defs/BinaryResponseBody"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetCanvasViewResponse": {
+      "properties": {
+        "manifest": true,
+        "view": {
+          "$ref": "#/$defs/CanvasViewEntry"
+        }
+      },
+      "required": [
+        "view",
+        "manifest"
+      ],
+      "type": "object"
+    },
+    "GetCanvasViewRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/CanvasViewPath"
+        },
+        "response": {
+          "$ref": "#/$defs/GetCanvasViewResponse"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetCanvasViewsResponse": {
+      "properties": {
+        "views": {
+          "items": {
+            "$ref": "#/$defs/CanvasViewEntry"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "views"
+      ],
+      "type": "object"
+    },
+    "GetCanvasViewsRoute": {
+      "properties": {
+        "response": {
+          "$ref": "#/$defs/GetCanvasViewsResponse"
+        }
+      },
+      "required": [
+        "response"
       ],
       "type": "object"
     },
@@ -1346,6 +1732,186 @@
       ],
       "type": "object"
     },
+    "PostCanvasPinRequest": {
+      "properties": {
+        "slot": {
+          "default": "main",
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view"
+      ],
+      "type": "object"
+    },
+    "PostCanvasPinResponse": {
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "pins": {
+          "items": {
+            "$ref": "#/$defs/CanvasPinEntry"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "ok",
+        "pins"
+      ],
+      "type": "object"
+    },
+    "PostCanvasPinRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostCanvasPinRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/PostCanvasPinResponse"
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostCanvasViewBuildResponse": {
+      "properties": {
+        "build": {
+          "$ref": "#/$defs/CanvasBuildResult"
+        },
+        "manifest": true,
+        "source_hash": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view",
+        "source_hash",
+        "build"
+      ],
+      "type": "object"
+    },
+    "PostCanvasViewBuildRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/CanvasViewPath"
+        },
+        "response": {
+          "$ref": "#/$defs/PostCanvasViewBuildResponse"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostCanvasViewSaveRequest": {
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "draft_id": {
+          "type": "string"
+        },
+        "expected_revision": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "overwrite": {
+          "default": false,
+          "type": "boolean"
+        },
+        "pin": {
+          "default": false,
+          "type": "boolean"
+        },
+        "project": {
+          "type": "string"
+        },
+        "typecheck": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "project",
+        "draft_id",
+        "author",
+        "name"
+      ],
+      "type": "object"
+    },
+    "PostCanvasViewSaveResponse": {
+      "properties": {
+        "bundle_hash": {
+          "type": "string"
+        },
+        "bundle_url": {
+          "type": "string"
+        },
+        "manifest": true,
+        "pinned": {
+          "type": "boolean"
+        },
+        "source_hash": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view",
+        "source_hash",
+        "bundle_hash",
+        "bundle_url",
+        "manifest",
+        "pinned"
+      ],
+      "type": "object"
+    },
+    "PostCanvasViewSaveRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/PostCanvasViewSaveRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/PostCanvasViewSaveResponse"
+        }
+      },
+      "required": [
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "PostCronBody": {
       "properties": {
         "id": {
@@ -1828,6 +2394,80 @@
           ]
         }
       },
+      "type": "object"
+    },
+    "PutCanvasDraftRequest": {
+      "properties": {
+        "build": {
+          "$ref": "#/$defs/CanvasBuildOptions",
+          "default": {
+            "mode": "preview",
+            "typecheck": false
+          }
+        },
+        "draft_id": {
+          "type": "string"
+        },
+        "expected_revision": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/CanvasSource"
+        }
+      },
+      "required": [
+        "draft_id",
+        "source"
+      ],
+      "type": "object"
+    },
+    "PutCanvasDraftResponse": {
+      "properties": {
+        "build": {
+          "$ref": "#/$defs/CanvasBuildResult"
+        },
+        "draft_id": {
+          "type": "string"
+        },
+        "revision": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source_hash": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "draft_id",
+        "revision",
+        "source_hash",
+        "build"
+      ],
+      "type": "object"
+    },
+    "PutCanvasDraftRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PutCanvasDraftRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/PutCanvasDraftResponse"
+        }
+      },
+      "required": [
+        "path",
+        "request",
+        "response"
+      ],
       "type": "object"
     },
     "PutFileContentQuery": {
@@ -2462,6 +3102,28 @@
       ],
       "type": "object"
     },
+    "ViewBuildStatus": {
+      "properties": {
+        "build_id": {
+          "type": "string"
+        },
+        "bundle_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "diagnostics": true,
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "status",
+        "build_id"
+      ],
+      "type": "object"
+    },
     "ViewRegisterRequest": {
       "properties": {
         "capabilities": true,
@@ -2520,6 +3182,18 @@
     "delete_shell": {
       "$ref": "#/$defs/DeleteShellRoute"
     },
+    "get_canvas_draft": {
+      "$ref": "#/$defs/GetCanvasDraftRoute"
+    },
+    "get_canvas_view": {
+      "$ref": "#/$defs/GetCanvasViewRoute"
+    },
+    "get_canvas_view_bundle": {
+      "$ref": "#/$defs/GetCanvasViewBundleRoute"
+    },
+    "get_canvas_views": {
+      "$ref": "#/$defs/GetCanvasViewsRoute"
+    },
     "get_channels": {
       "$ref": "#/$defs/GetChannelsRoute"
     },
@@ -2561,6 +3235,15 @@
     },
     "post_approval": {
       "$ref": "#/$defs/PostApprovalRoute"
+    },
+    "post_canvas_pin": {
+      "$ref": "#/$defs/PostCanvasPinRoute"
+    },
+    "post_canvas_view_build": {
+      "$ref": "#/$defs/PostCanvasViewBuildRoute"
+    },
+    "post_canvas_view_save": {
+      "$ref": "#/$defs/PostCanvasViewSaveRoute"
     },
     "post_cron": {
       "$ref": "#/$defs/PostCronRoute"
@@ -2604,6 +3287,9 @@
     "post_view_unregister": {
       "$ref": "#/$defs/PostViewUnregisterRoute"
     },
+    "put_canvas_draft": {
+      "$ref": "#/$defs/PutCanvasDraftRoute"
+    },
     "put_file_content": {
       "$ref": "#/$defs/PutFileContentRoute"
     }
@@ -2628,6 +3314,14 @@
     "post_view_unregister",
     "post_view_state",
     "post_view_action_result",
+    "put_canvas_draft",
+    "get_canvas_draft",
+    "post_canvas_view_save",
+    "get_canvas_views",
+    "get_canvas_view",
+    "post_canvas_view_build",
+    "get_canvas_view_bundle",
+    "post_canvas_pin",
     "get_messages",
     "get_stream",
     "post_shell",

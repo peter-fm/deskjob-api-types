@@ -97,6 +97,14 @@ export type ApiStreamFrame =
       type: "view_action_request";
       view_id: string;
       [k: string]: unknown;
+    }
+  | {
+      build: ViewBuildStatus;
+      build_id: string;
+      project: string;
+      type: "view_build_status_changed";
+      view_name: string;
+      [k: string]: unknown;
     };
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
@@ -312,10 +320,19 @@ export type EngineSelection = "codex" | "opus" | "claude";
  * via the `definition` "UserId".
  */
 export type UserId = number;
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "BuildMode".
+ */
+export type BuildMode = "preview" | "release";
 
 export interface ApiTypes {
   delete_cron: DeleteCronRoute;
   delete_shell: DeleteShellRoute;
+  get_canvas_draft: GetCanvasDraftRoute;
+  get_canvas_view: GetCanvasViewRoute;
+  get_canvas_view_bundle: GetCanvasViewBundleRoute;
+  get_canvas_views: GetCanvasViewsRoute;
   get_channels: GetChannelsRoute;
   get_cron: GetCronRoute;
   get_dreams: GetDreamsRoute;
@@ -330,6 +347,9 @@ export interface ApiTypes {
   get_shell_stream: GetShellStreamRoute;
   get_stream: GetStreamRoute;
   post_approval: PostApprovalRoute;
+  post_canvas_pin: PostCanvasPinRoute;
+  post_canvas_view_build: PostCanvasViewBuildRoute;
+  post_canvas_view_save: PostCanvasViewSaveRoute;
   post_cron: PostCronRoute;
   post_effort: PostEffortRoute;
   post_interrupt: PostInterruptRoute;
@@ -344,6 +364,7 @@ export interface ApiTypes {
   post_view_register: PostViewRegisterRoute;
   post_view_state: PostViewStateRoute;
   post_view_unregister: PostViewUnregisterRoute;
+  put_canvas_draft: PutCanvasDraftRoute;
   put_file_content: PutFileContentRoute;
   [k: string]: unknown;
 }
@@ -409,6 +430,158 @@ export interface ShellKillPayload {
   killed: boolean;
   session_id: string;
   state: ShellSessionState;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasDraftRoute".
+ */
+export interface GetCanvasDraftRoute {
+  path: ProjectPath;
+  query: GetCanvasDraftQuery;
+  response: GetCanvasDraftResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasDraftQuery".
+ */
+export interface GetCanvasDraftQuery {
+  include_source?: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasDraftResponse".
+ */
+export interface GetCanvasDraftResponse {
+  build: CanvasBuildResult;
+  draft_id: string;
+  project: string;
+  revision: number;
+  source?: CanvasSource | null;
+  source_hash: string;
+  updated_at: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasBuildResult".
+ */
+export interface CanvasBuildResult {
+  bundle_hash?: string | null;
+  bundle_url?: string | null;
+  diagnostics?: CanvasBuildDiagnostic[];
+  duration_ms?: number | null;
+  runtime_abi?: string | null;
+  status: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasBuildDiagnostic".
+ */
+export interface CanvasBuildDiagnostic {
+  column?: number | null;
+  file?: string | null;
+  line?: number | null;
+  message: string;
+  severity: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasSource".
+ */
+export interface CanvasSource {
+  entry: string;
+  files: {
+    [k: string]: string;
+  };
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasViewRoute".
+ */
+export interface GetCanvasViewRoute {
+  path: CanvasViewPath;
+  response: GetCanvasViewResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewPath".
+ */
+export interface CanvasViewPath {
+  author: string;
+  name: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasViewResponse".
+ */
+export interface GetCanvasViewResponse {
+  manifest: unknown;
+  view: CanvasViewEntry;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewEntry".
+ */
+export interface CanvasViewEntry {
+  author: string;
+  bundle_hash: string;
+  bundle_url: string;
+  description?: string | null;
+  name: string;
+  runtime_abi: string;
+  source_hash: string;
+  thumbnail_url?: string | null;
+  updated_at: string;
+  view: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasViewBundleRoute".
+ */
+export interface GetCanvasViewBundleRoute {
+  path: CanvasViewBundlePath;
+  response: BinaryResponseBody;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewBundlePath".
+ */
+export interface CanvasViewBundlePath {
+  author: string;
+  bundle: string;
+  name: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "BinaryResponseBody".
+ */
+export type BinaryResponseBody = Blob;
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasViewsRoute".
+ */
+export interface GetCanvasViewsRoute {
+  response: GetCanvasViewsResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasViewsResponse".
+ */
+export interface GetCanvasViewsResponse {
+  views: CanvasViewEntry[];
   [k: string]: unknown;
 }
 /**
@@ -563,11 +736,6 @@ export interface GetFileContentQuery {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "BinaryResponseBody".
- */
-export type BinaryResponseBody = Blob;
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetFilesRoute".
  */
 export interface GetFilesRoute {
@@ -708,6 +876,17 @@ export interface MessagesPayload {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ViewBuildStatus".
+ */
+export interface ViewBuildStatus {
+  build_id: string;
+  bundle_hash?: string | null;
+  diagnostics?: unknown;
+  status: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetModelRoute".
  */
 export interface GetModelRoute {
@@ -817,6 +996,101 @@ export interface PostApprovalRoute {
  */
 export interface PostApprovalBody {
   decision: ApprovalDecision;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasPinRoute".
+ */
+export interface PostCanvasPinRoute {
+  path: ProjectPath;
+  request: PostCanvasPinRequest;
+  response: PostCanvasPinResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasPinRequest".
+ */
+export interface PostCanvasPinRequest {
+  slot?: string;
+  view: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasPinResponse".
+ */
+export interface PostCanvasPinResponse {
+  ok: boolean;
+  pins: CanvasPinEntry[];
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasPinEntry".
+ */
+export interface CanvasPinEntry {
+  slot: string;
+  view: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasViewBuildRoute".
+ */
+export interface PostCanvasViewBuildRoute {
+  path: CanvasViewPath;
+  response: PostCanvasViewBuildResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasViewBuildResponse".
+ */
+export interface PostCanvasViewBuildResponse {
+  build: CanvasBuildResult;
+  manifest?: unknown;
+  source_hash: string;
+  view: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasViewSaveRoute".
+ */
+export interface PostCanvasViewSaveRoute {
+  request: PostCanvasViewSaveRequest;
+  response: PostCanvasViewSaveResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasViewSaveRequest".
+ */
+export interface PostCanvasViewSaveRequest {
+  author: string;
+  description?: string | null;
+  draft_id: string;
+  expected_revision?: number | null;
+  name: string;
+  overwrite?: boolean;
+  pin?: boolean;
+  project: string;
+  typecheck?: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasViewSaveResponse".
+ */
+export interface PostCanvasViewSaveResponse {
+  bundle_hash: string;
+  bundle_url: string;
+  manifest: unknown;
+  pinned: boolean;
+  source_hash: string;
+  view: string;
   [k: string]: unknown;
 }
 /**
@@ -1145,6 +1419,43 @@ export interface ViewUnregisterRequest {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PutCanvasDraftRoute".
+ */
+export interface PutCanvasDraftRoute {
+  path: ProjectPath;
+  request: PutCanvasDraftRequest;
+  response: PutCanvasDraftResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PutCanvasDraftRequest".
+ */
+export interface PutCanvasDraftRequest {
+  build?: CanvasBuildOptions;
+  draft_id: string;
+  expected_revision?: number | null;
+  source: CanvasSource;
+  [k: string]: unknown;
+}
+export interface CanvasBuildOptions {
+  mode?: "preview" | "release";
+  typecheck?: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PutCanvasDraftResponse".
+ */
+export interface PutCanvasDraftResponse {
+  build: CanvasBuildResult;
+  draft_id: string;
+  revision: number;
+  source_hash: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "PutFileContentRoute".
  */
 export interface PutFileContentRoute {
@@ -1173,5 +1484,14 @@ export type FileContentWriteRequest = Blob | ArrayBuffer | Uint8Array;
  */
 export interface FileContentWriteResponse {
   ok: boolean;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasBuildOptions".
+ */
+export interface CanvasBuildOptions1 {
+  mode?: "preview" | "release";
+  typecheck?: boolean;
   [k: string]: unknown;
 }
