@@ -271,6 +271,44 @@
             "build"
           ],
           "type": "object"
+        },
+        {
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "project": {
+              "type": "string"
+            },
+            "revision": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "slot": {
+              "type": "string"
+            },
+            "type": {
+              "const": "canvas_state_changed",
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            },
+            "view": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "project",
+            "view",
+            "slot",
+            "key",
+            "revision",
+            "updated_at"
+          ],
+          "type": "object"
         }
       ]
     },
@@ -483,6 +521,17 @@
       ],
       "type": "object"
     },
+    "CanvasProjectDataQuery": {
+      "properties": {
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "source"
+      ],
+      "type": "object"
+    },
     "CanvasSource": {
       "properties": {
         "entry": {
@@ -498,6 +547,25 @@
       "required": [
         "entry",
         "files"
+      ],
+      "type": "object"
+    },
+    "CanvasStateQuery": {
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "slot": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view",
+        "slot",
+        "key"
       ],
       "type": "object"
     },
@@ -1147,6 +1215,115 @@
       ],
       "type": "object"
     },
+    "ForgeArtifactSummary": {
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "modified_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "size": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "path",
+        "kind",
+        "name"
+      ],
+      "type": "object"
+    },
+    "ForgeProjectData": {
+      "properties": {
+        "archived_instructions": {
+          "items": {
+            "$ref": "#/$defs/ForgeArtifactSummary"
+          },
+          "type": "array"
+        },
+        "investigations": {
+          "items": {
+            "$ref": "#/$defs/ForgeArtifactSummary"
+          },
+          "type": "array"
+        },
+        "root": {
+          "type": "string"
+        },
+        "runs": {
+          "items": {
+            "$ref": "#/$defs/ForgeRunSummary"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "root",
+        "runs",
+        "investigations",
+        "archived_instructions"
+      ],
+      "type": "object"
+    },
+    "ForgeRunSummary": {
+      "properties": {
+        "artifacts": {
+          "items": {
+            "$ref": "#/$defs/ForgeArtifactSummary"
+          },
+          "type": "array"
+        },
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "updated_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "status",
+        "artifacts"
+      ],
+      "type": "object"
+    },
     "GetCanvasDraftQuery": {
       "properties": {
         "include_source": {
@@ -1209,6 +1386,86 @@
         },
         "response": {
           "$ref": "#/$defs/GetCanvasDraftResponse"
+        }
+      },
+      "required": [
+        "path",
+        "query",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetCanvasProjectDataResponse": {
+      "properties": {
+        "forge": {
+          "$ref": "#/$defs/ForgeProjectData"
+        },
+        "generated_at": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "project",
+        "source",
+        "generated_at",
+        "forge"
+      ],
+      "type": "object"
+    },
+    "GetCanvasProjectDataRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/CanvasProjectDataQuery"
+        },
+        "response": {
+          "$ref": "#/$defs/GetCanvasProjectDataResponse"
+        }
+      },
+      "required": [
+        "path",
+        "query",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetCanvasStateResponse": {
+      "properties": {
+        "revision": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "updated_at": {
+          "type": "string"
+        },
+        "value": true
+      },
+      "required": [
+        "value",
+        "revision",
+        "updated_at"
+      ],
+      "type": "object"
+    },
+    "GetCanvasStateRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/CanvasStateQuery"
+        },
+        "response": {
+          "$ref": "#/$defs/GetCanvasStateResponse"
         }
       },
       "required": [
@@ -1527,6 +1784,17 @@
       ],
       "type": "object"
     },
+    "GetWhoamiRoute": {
+      "properties": {
+        "response": {
+          "$ref": "#/$defs/ApiUser"
+        }
+      },
+      "required": [
+        "response"
+      ],
+      "type": "object"
+    },
     "GitStatus": {
       "enum": [
         "clean",
@@ -1738,6 +2006,49 @@
           ]
         }
       },
+      "type": "object"
+    },
+    "MessageAttachment": {
+      "properties": {
+        "attachment_id": {
+          "type": "string"
+        },
+        "content_type": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "size_bytes": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "attachment_id",
+        "filename",
+        "content_type",
+        "size_bytes",
+        "sha256",
+        "path"
+      ],
+      "type": "object"
+    },
+    "MessageAttachmentStatus": {
+      "enum": [
+        "pending",
+        "attached"
+      ],
+      "type": "string"
+    },
+    "MessageAttachmentUploadRequest": {
       "type": "object"
     },
     "MessagesPayload": {
@@ -2116,8 +2427,120 @@
       ],
       "type": "object"
     },
+    "PostMessageAttachmentRef": {
+      "properties": {
+        "attachment_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "attachment_id"
+      ],
+      "type": "object"
+    },
+    "PostMessageAttachmentUploadQuery": {
+      "properties": {
+        "channel_id": {
+          "examples": [
+            "public:default",
+            "dm:agent:pete"
+          ],
+          "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
+          "type": "string"
+        },
+        "filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "project": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "project",
+        "channel_id"
+      ],
+      "type": "object"
+    },
+    "PostMessageAttachmentUploadResponse": {
+      "properties": {
+        "attachment_id": {
+          "type": "string"
+        },
+        "channel_id": {
+          "examples": [
+            "public:default",
+            "dm:agent:pete"
+          ],
+          "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
+          "type": "string"
+        },
+        "content_type": {
+          "type": "string"
+        },
+        "expires_at": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "project": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string"
+        },
+        "size_bytes": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "status": {
+          "$ref": "#/$defs/MessageAttachmentStatus"
+        }
+      },
+      "required": [
+        "attachment_id",
+        "project",
+        "channel_id",
+        "filename",
+        "content_type",
+        "size_bytes",
+        "sha256",
+        "status",
+        "expires_at"
+      ],
+      "type": "object"
+    },
+    "PostMessageAttachmentUploadRoute": {
+      "properties": {
+        "query": {
+          "$ref": "#/$defs/PostMessageAttachmentUploadQuery"
+        },
+        "request": {
+          "$ref": "#/$defs/MessageAttachmentUploadRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/PostMessageAttachmentUploadResponse"
+        }
+      },
+      "required": [
+        "query",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "PostMessageBody": {
       "properties": {
+        "attachments": {
+          "items": {
+            "$ref": "#/$defs/PostMessageAttachmentRef"
+          },
+          "type": "array"
+        },
         "channel_id": {
           "examples": [
             "public:default",
@@ -2569,6 +2992,44 @@
       },
       "required": [
         "path",
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PutCanvasStateResponse": {
+      "properties": {
+        "revision": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "updated_at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "revision",
+        "updated_at"
+      ],
+      "type": "object"
+    },
+    "PutCanvasStateRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "query": {
+          "$ref": "#/$defs/CanvasStateQuery"
+        },
+        "request": true,
+        "response": {
+          "$ref": "#/$defs/PutCanvasStateResponse"
+        }
+      },
+      "required": [
+        "path",
+        "query",
         "request",
         "response"
       ],
@@ -3295,6 +3756,12 @@
     "get_canvas_draft": {
       "$ref": "#/$defs/GetCanvasDraftRoute"
     },
+    "get_canvas_project_data": {
+      "$ref": "#/$defs/GetCanvasProjectDataRoute"
+    },
+    "get_canvas_state": {
+      "$ref": "#/$defs/GetCanvasStateRoute"
+    },
     "get_canvas_view": {
       "$ref": "#/$defs/GetCanvasViewRoute"
     },
@@ -3343,6 +3810,12 @@
     "get_stream": {
       "$ref": "#/$defs/GetStreamRoute"
     },
+    "get_whoami": {
+      "$ref": "#/$defs/GetWhoamiRoute"
+    },
+    "message_attachment": {
+      "$ref": "#/$defs/MessageAttachment"
+    },
     "post_approval": {
       "$ref": "#/$defs/PostApprovalRoute"
     },
@@ -3369,6 +3842,9 @@
     },
     "post_message": {
       "$ref": "#/$defs/PostMessageRoute"
+    },
+    "post_message_attachment_upload": {
+      "$ref": "#/$defs/PostMessageAttachmentUploadRoute"
     },
     "post_model": {
       "$ref": "#/$defs/PostModelRoute"
@@ -3400,17 +3876,22 @@
     "put_canvas_draft": {
       "$ref": "#/$defs/PutCanvasDraftRoute"
     },
+    "put_canvas_state": {
+      "$ref": "#/$defs/PutCanvasStateRoute"
+    },
     "put_file_content": {
       "$ref": "#/$defs/PutFileContentRoute"
     }
   },
   "required": [
+    "get_whoami",
     "get_projects",
     "get_project",
     "post_project",
     "get_files",
     "get_file_content",
     "put_file_content",
+    "post_message_attachment_upload",
     "get_channels",
     "post_plan",
     "post_queue",
@@ -3419,6 +3900,7 @@
     "get_model",
     "post_model",
     "post_message",
+    "message_attachment",
     "post_approval",
     "post_view_register",
     "post_view_unregister",
@@ -3433,6 +3915,9 @@
     "get_canvas_view_bundle",
     "post_canvas_pin",
     "delete_canvas_pin",
+    "get_canvas_state",
+    "put_canvas_state",
+    "get_canvas_project_data",
     "canvas_emit_view_draft_tool",
     "get_messages",
     "get_stream",
