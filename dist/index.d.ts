@@ -360,6 +360,7 @@ export interface ApiTypes {
   get_canvas_state: GetCanvasStateRoute;
   get_canvas_view: GetCanvasViewRoute;
   get_canvas_view_bundle: GetCanvasViewBundleRoute;
+  get_canvas_view_source: GetCanvasViewSourceRoute;
   get_canvas_views: GetCanvasViewsRoute;
   get_channels: GetChannelsRoute;
   get_cron: GetCronRoute;
@@ -764,6 +765,15 @@ export interface CanvasViewBundlePath {
  * via the `definition` "BinaryResponseBody".
  */
 export type BinaryResponseBody = Blob;
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasViewSourceRoute".
+ */
+export interface GetCanvasViewSourceRoute {
+  path: CanvasViewPath;
+  response: CanvasSource;
+  [k: string]: unknown;
+}
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetCanvasViewsRoute".

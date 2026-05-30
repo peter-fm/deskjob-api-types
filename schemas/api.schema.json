@@ -1518,6 +1518,21 @@
       ],
       "type": "object"
     },
+    "GetCanvasViewSourceRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/CanvasViewPath"
+        },
+        "response": {
+          "$ref": "#/$defs/CanvasSource"
+        }
+      },
+      "required": [
+        "path",
+        "response"
+      ],
+      "type": "object"
+    },
     "GetCanvasViewsResponse": {
       "properties": {
         "views": {
@@ -3768,6 +3783,9 @@
     "get_canvas_view_bundle": {
       "$ref": "#/$defs/GetCanvasViewBundleRoute"
     },
+    "get_canvas_view_source": {
+      "$ref": "#/$defs/GetCanvasViewSourceRoute"
+    },
     "get_canvas_views": {
       "$ref": "#/$defs/GetCanvasViewsRoute"
     },
@@ -3911,6 +3929,7 @@
     "post_canvas_view_save",
     "get_canvas_views",
     "get_canvas_view",
+    "get_canvas_view_source",
     "post_canvas_view_build",
     "get_canvas_view_bundle",
     "post_canvas_pin",
