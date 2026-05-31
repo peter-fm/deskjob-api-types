@@ -352,10 +352,12 @@ export type BuildMode = "preview" | "release";
 
 export interface ApiTypes {
   canvas_emit_view_draft_tool: CanvasEmitViewDraftToolRoute;
+  delete_canvas_draft: DeleteCanvasDraftRoute;
   delete_canvas_pin: DeleteCanvasPinRoute;
   delete_cron: DeleteCronRoute;
   delete_shell: DeleteShellRoute;
   get_canvas_draft: GetCanvasDraftRoute;
+  get_canvas_pins: GetCanvasPinsRoute;
   get_canvas_project_data: GetCanvasProjectDataRoute;
   get_canvas_state: GetCanvasStateRoute;
   get_canvas_view: GetCanvasViewRoute;
@@ -471,12 +473,10 @@ export interface CanvasBuildDiagnostic {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "DeleteCanvasPinRoute".
+ * via the `definition` "DeleteCanvasDraftRoute".
  */
-export interface DeleteCanvasPinRoute {
+export interface DeleteCanvasDraftRoute {
   path: ProjectPath;
-  query: DeleteCanvasPinQuery;
-  response: PostCanvasPinResponse;
   [k: string]: unknown;
 }
 /**
@@ -485,6 +485,16 @@ export interface DeleteCanvasPinRoute {
  */
 export interface ProjectPath {
   project: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "DeleteCanvasPinRoute".
+ */
+export interface DeleteCanvasPinRoute {
+  path: ProjectPath;
+  query: DeleteCanvasPinQuery;
+  response: PostCanvasPinResponse;
   [k: string]: unknown;
 }
 /**
@@ -599,6 +609,23 @@ export interface GetCanvasDraftResponse {
   source?: CanvasSource | null;
   source_hash: string;
   updated_at: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasPinsRoute".
+ */
+export interface GetCanvasPinsRoute {
+  path: ProjectPath;
+  response: GetCanvasPinsResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "GetCanvasPinsResponse".
+ */
+export interface GetCanvasPinsResponse {
+  pins: CanvasPinEntry[];
   [k: string]: unknown;
 }
 /**

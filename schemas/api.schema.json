@@ -758,6 +758,17 @@
       ],
       "type": "object"
     },
+    "DeleteCanvasDraftRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "type": "object"
+    },
     "DeleteCanvasPinQuery": {
       "properties": {
         "slot": {
@@ -1391,6 +1402,35 @@
       "required": [
         "path",
         "query",
+        "response"
+      ],
+      "type": "object"
+    },
+    "GetCanvasPinsResponse": {
+      "properties": {
+        "pins": {
+          "items": {
+            "$ref": "#/$defs/CanvasPinEntry"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "pins"
+      ],
+      "type": "object"
+    },
+    "GetCanvasPinsRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "response": {
+          "$ref": "#/$defs/GetCanvasPinsResponse"
+        }
+      },
+      "required": [
+        "path",
         "response"
       ],
       "type": "object"
@@ -3759,6 +3799,9 @@
     "canvas_emit_view_draft_tool": {
       "$ref": "#/$defs/CanvasEmitViewDraftToolRoute"
     },
+    "delete_canvas_draft": {
+      "$ref": "#/$defs/DeleteCanvasDraftRoute"
+    },
     "delete_canvas_pin": {
       "$ref": "#/$defs/DeleteCanvasPinRoute"
     },
@@ -3770,6 +3813,9 @@
     },
     "get_canvas_draft": {
       "$ref": "#/$defs/GetCanvasDraftRoute"
+    },
+    "get_canvas_pins": {
+      "$ref": "#/$defs/GetCanvasPinsRoute"
     },
     "get_canvas_project_data": {
       "$ref": "#/$defs/GetCanvasProjectDataRoute"
@@ -3926,12 +3972,14 @@
     "post_view_action_result",
     "put_canvas_draft",
     "get_canvas_draft",
+    "delete_canvas_draft",
     "post_canvas_view_save",
     "get_canvas_views",
     "get_canvas_view",
     "get_canvas_view_source",
     "post_canvas_view_build",
     "get_canvas_view_bundle",
+    "get_canvas_pins",
     "post_canvas_pin",
     "delete_canvas_pin",
     "get_canvas_state",
