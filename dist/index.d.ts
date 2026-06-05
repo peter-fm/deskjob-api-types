@@ -108,10 +108,17 @@ export type ApiStreamFrame =
     }
   | {
       build: CanvasBuildResult;
+      channel_id: string;
       draft_id: string;
       project: string;
       revision: number;
+      seq: number;
       source_hash: string;
+      /**
+       * Epoch milliseconds since the Unix epoch for the draft-ready frame.
+       */
+      timestamp?: number | null;
+      turn_id: string;
       type: "view_draft_ready";
       [k: string]: unknown;
     }

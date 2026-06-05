@@ -243,6 +243,14 @@
             "build": {
               "$ref": "#/$defs/CanvasBuildResult"
             },
+            "channel_id": {
+              "examples": [
+                "public:default",
+                "dm:agent:pete"
+              ],
+              "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
+              "type": "string"
+            },
             "draft_id": {
               "type": "string"
             },
@@ -254,7 +262,23 @@
               "minimum": 0,
               "type": "integer"
             },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
             "source_hash": {
+              "type": "string"
+            },
+            "timestamp": {
+              "description": "Epoch milliseconds since the Unix epoch for the draft-ready frame.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "turn_id": {
               "type": "string"
             },
             "type": {
@@ -264,7 +288,10 @@
           },
           "required": [
             "type",
+            "seq",
             "project",
+            "channel_id",
+            "turn_id",
             "draft_id",
             "revision",
             "source_hash",
