@@ -90,6 +90,20 @@ export type ApiStreamFrame =
       [k: string]: unknown;
     }
   | {
+      allow_free_text: boolean;
+      body: string;
+      channel_id: string;
+      created_at: string;
+      id: string;
+      options: PromptOption[];
+      project: string;
+      seq: number;
+      title: string;
+      turn_id: string;
+      type: "prompt_request";
+      [k: string]: unknown;
+    }
+  | {
       action: string;
       args: unknown;
       project: string;
@@ -399,12 +413,14 @@ export interface ApiTypes {
   post_model: PostModelRoute;
   post_plan: PostPlanRoute;
   post_project: PostProjectRoute;
+  post_prompt: PostPromptRoute;
   post_queue: PostQueueRoute;
   post_shell: PostShellRoute;
   post_view_action_result: PostViewActionResultRoute;
   post_view_register: PostViewRegisterRoute;
   post_view_state: PostViewStateRoute;
   post_view_unregister: PostViewUnregisterRoute;
+  prompt_request_frame: PromptRequestFrame;
   put_canvas_draft: PutCanvasDraftRoute;
   put_canvas_state: PutCanvasStateRoute;
   put_file_content: PutFileContentRoute;
@@ -1116,6 +1132,16 @@ export interface MessagesPayload {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PromptOption".
+ */
+export interface PromptOption {
+  description?: string | null;
+  id: string;
+  label: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "ViewBuildStatus".
  */
 export interface ViewBuildStatus {
@@ -1389,7 +1415,16 @@ export interface PostEffortBody {
  */
 export interface PostInterruptRoute {
   path: ProjectChannelPath;
+  request: PostInterruptBody;
   response: InterruptPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostInterruptBody".
+ */
+export interface PostInterruptBody {
+  message?: string | null;
   [k: string]: unknown;
 }
 /**
@@ -1397,6 +1432,7 @@ export interface PostInterruptRoute {
  * via the `definition` "InterruptPayload".
  */
 export interface InterruptPayload {
+  accepted_turn_id?: string | null;
   interrupted: boolean;
   [k: string]: unknown;
 }
@@ -1549,6 +1585,32 @@ export interface PostProjectRoute {
  */
 export interface PostProjectBody {
   name: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostPromptRoute".
+ */
+export interface PostPromptRoute {
+  request: PostPromptBody;
+  response: PromptAnswerPayload;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostPromptBody".
+ */
+export interface PostPromptBody {
+  option_id?: string | null;
+  text?: string | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PromptAnswerPayload".
+ */
+export interface PromptAnswerPayload {
+  answer: string;
   [k: string]: unknown;
 }
 /**
@@ -1708,6 +1770,24 @@ export interface PostViewUnregisterRoute {
  */
 export interface ViewUnregisterRequest {
   view_id: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PromptRequestFrame".
+ */
+export interface PromptRequestFrame {
+  allow_free_text: boolean;
+  body: string;
+  channel_id: string;
+  created_at: string;
+  id: string;
+  options: PromptOption[];
+  project: string;
+  seq: number;
+  title: string;
+  turn_id: string;
+  type: string;
   [k: string]: unknown;
 }
 /**

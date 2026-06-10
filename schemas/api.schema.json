@@ -182,6 +182,68 @@
         },
         {
           "properties": {
+            "allow_free_text": {
+              "type": "boolean"
+            },
+            "body": {
+              "type": "string"
+            },
+            "channel_id": {
+              "examples": [
+                "public:default",
+                "dm:agent:pete"
+              ],
+              "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "options": {
+              "items": {
+                "$ref": "#/$defs/PromptOption"
+              },
+              "type": "array"
+            },
+            "project": {
+              "type": "string"
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "turn_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "prompt_request",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "id",
+            "project",
+            "channel_id",
+            "turn_id",
+            "title",
+            "body",
+            "options",
+            "allow_free_text",
+            "created_at"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
             "action": {
               "type": "string"
             },
@@ -1916,6 +1978,12 @@
     },
     "InterruptPayload": {
       "properties": {
+        "accepted_turn_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "interrupted": {
           "type": "boolean"
         }
@@ -2479,10 +2547,24 @@
       ],
       "type": "object"
     },
+    "PostInterruptBody": {
+      "properties": {
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
     "PostInterruptRoute": {
       "properties": {
         "path": {
           "$ref": "#/$defs/ProjectChannelPath"
+        },
+        "request": {
+          "$ref": "#/$defs/PostInterruptBody"
         },
         "response": {
           "$ref": "#/$defs/InterruptPayload"
@@ -2490,6 +2572,7 @@
       },
       "required": [
         "path",
+        "request",
         "response"
       ],
       "type": "object"
@@ -2767,6 +2850,38 @@
       ],
       "type": "object"
     },
+    "PostPromptBody": {
+      "properties": {
+        "option_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "PostPromptRoute": {
+      "properties": {
+        "request": {
+          "$ref": "#/$defs/PostPromptBody"
+        },
+        "response": {
+          "$ref": "#/$defs/PromptAnswerPayload"
+        }
+      },
+      "required": [
+        "request",
+        "response"
+      ],
+      "type": "object"
+    },
     "PostQueueBody": {
       "properties": {
         "message": {
@@ -3003,6 +3118,99 @@
           ]
         }
       },
+      "type": "object"
+    },
+    "PromptAnswerPayload": {
+      "properties": {
+        "answer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "answer"
+      ],
+      "type": "object"
+    },
+    "PromptOption": {
+      "properties": {
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "type": "object"
+    },
+    "PromptRequestFrame": {
+      "properties": {
+        "allow_free_text": {
+          "type": "boolean"
+        },
+        "body": {
+          "type": "string"
+        },
+        "channel_id": {
+          "examples": [
+            "public:default",
+            "dm:agent:pete"
+          ],
+          "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "$ref": "#/$defs/PromptOption"
+          },
+          "type": "array"
+        },
+        "project": {
+          "type": "string"
+        },
+        "seq": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "turn_id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "seq",
+        "type",
+        "id",
+        "project",
+        "channel_id",
+        "turn_id",
+        "title",
+        "body",
+        "options",
+        "allow_free_text",
+        "created_at"
+      ],
       "type": "object"
     },
     "PutCanvasDraftRequest": {
@@ -3946,6 +4154,9 @@
     "post_project": {
       "$ref": "#/$defs/PostProjectRoute"
     },
+    "post_prompt": {
+      "$ref": "#/$defs/PostPromptRoute"
+    },
     "post_queue": {
       "$ref": "#/$defs/PostQueueRoute"
     },
@@ -3963,6 +4174,9 @@
     },
     "post_view_unregister": {
       "$ref": "#/$defs/PostViewUnregisterRoute"
+    },
+    "prompt_request_frame": {
+      "$ref": "#/$defs/PromptRequestFrame"
     },
     "put_canvas_draft": {
       "$ref": "#/$defs/PutCanvasDraftRoute"
@@ -3993,6 +4207,7 @@
     "post_message",
     "message_attachment",
     "post_approval",
+    "post_prompt",
     "post_view_register",
     "post_view_unregister",
     "post_view_state",
@@ -4015,6 +4230,7 @@
     "canvas_emit_view_draft_tool",
     "get_messages",
     "get_stream",
+    "prompt_request_frame",
     "post_shell",
     "get_shell_stream",
     "delete_shell",
