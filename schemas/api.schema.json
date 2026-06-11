@@ -346,6 +346,16 @@
             "type": {
               "const": "view_draft_ready",
               "type": "string"
+            },
+            "viewManifest": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/CanvasViewManifest"
+                },
+                {
+                  "type": "null"
+                }
+              ]
             }
           },
           "required": [
@@ -553,6 +563,93 @@
       ],
       "type": "object"
     },
+    "CanvasDurableStateRef": {
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "slot": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "view",
+        "slot",
+        "key",
+        "type",
+        "description"
+      ],
+      "type": "object"
+    },
+    "CanvasDurableViewTarget": {
+      "oneOf": [
+        {
+          "properties": {
+            "kind": {
+              "const": "pin",
+              "type": "string"
+            },
+            "slot": {
+              "default": "main",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "kind": {
+              "const": "saved",
+              "type": "string"
+            },
+            "slot": {
+              "default": "main",
+              "type": "string"
+            },
+            "view": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "view"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "draft_id": {
+              "default": "draft",
+              "type": "string"
+            },
+            "kind": {
+              "const": "draft",
+              "type": "string"
+            },
+            "slot": {
+              "default": "main",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        }
+      ]
+    },
     "CanvasEmitViewDraftTool": {
       "properties": {
         "build_mode": {
@@ -621,6 +718,62 @@
       ],
       "type": "object"
     },
+    "CanvasResolvedDurableView": {
+      "oneOf": [
+        {
+          "properties": {
+            "author": {
+              "type": "string"
+            },
+            "kind": {
+              "const": "saved",
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "slot": {
+              "type": "string"
+            },
+            "view": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "view",
+            "author",
+            "name",
+            "slot"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "draft_id": {
+              "type": "string"
+            },
+            "kind": {
+              "const": "draft",
+              "type": "string"
+            },
+            "slot": {
+              "type": "string"
+            },
+            "view": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "draft_id",
+            "slot",
+            "view"
+          ],
+          "type": "object"
+        }
+      ]
+    },
     "CanvasSource": {
       "properties": {
         "entry": {
@@ -677,6 +830,59 @@
       ],
       "type": "object"
     },
+    "CanvasViewDescribeRequest": {
+      "properties": {
+        "target": {
+          "$ref": "#/$defs/CanvasDurableViewTarget"
+        }
+      },
+      "required": [
+        "target"
+      ],
+      "type": "object"
+    },
+    "CanvasViewDescribeResponse": {
+      "properties": {
+        "bundleHash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "capabilities": true,
+        "project": {
+          "type": "string"
+        },
+        "resolved": {
+          "$ref": "#/$defs/CanvasResolvedDurableView"
+        },
+        "sourceHash": {
+          "type": "string"
+        },
+        "state": {
+          "items": {
+            "$ref": "#/$defs/CanvasDurableStateRef"
+          },
+          "type": "array"
+        },
+        "target": {
+          "$ref": "#/$defs/CanvasDurableViewTarget"
+        },
+        "viewManifest": {
+          "$ref": "#/$defs/CanvasViewManifest"
+        }
+      },
+      "required": [
+        "project",
+        "target",
+        "resolved",
+        "sourceHash",
+        "viewManifest",
+        "capabilities",
+        "state"
+      ],
+      "type": "object"
+    },
     "CanvasViewEntry": {
       "properties": {
         "author": {
@@ -725,6 +931,110 @@
         "bundle_url",
         "runtime_abi",
         "updated_at"
+      ],
+      "type": "object"
+    },
+    "CanvasViewManifest": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "$ref": "#/$defs/CanvasViewManifestAction"
+          },
+          "type": "array"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "schemaVersion": {
+          "format": "uint64",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "state": {
+          "items": {
+            "$ref": "#/$defs/CanvasViewManifestState"
+          },
+          "type": "array"
+        },
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "usage": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "purpose",
+        "actions",
+        "state"
+      ],
+      "type": "object"
+    },
+    "CanvasViewManifestAction": {
+      "additionalProperties": false,
+      "properties": {
+        "args": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "example": {
+          "additionalProperties": true,
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "args"
+      ],
+      "type": "object"
+    },
+    "CanvasViewManifestState": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "key",
+        "type",
+        "description"
       ],
       "type": "object"
     },
@@ -883,6 +1193,17 @@
         "path",
         "query",
         "response"
+      ],
+      "type": "object"
+    },
+    "DeleteCanvasViewRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/CanvasViewPath"
+        }
+      },
+      "required": [
+        "path"
       ],
       "type": "object"
     },
@@ -1464,6 +1785,16 @@
         },
         "updated_at": {
           "type": "string"
+        },
+        "viewManifest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanvasViewManifest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -1624,6 +1955,16 @@
         "manifest": true,
         "view": {
           "$ref": "#/$defs/CanvasViewEntry"
+        },
+        "viewManifest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanvasViewManifest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -2360,6 +2701,16 @@
         },
         "view": {
           "type": "string"
+        },
+        "viewManifest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanvasViewManifest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -2380,6 +2731,25 @@
       },
       "required": [
         "path",
+        "response"
+      ],
+      "type": "object"
+    },
+    "PostCanvasViewDescribeRoute": {
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/ProjectPath"
+        },
+        "request": {
+          "$ref": "#/$defs/CanvasViewDescribeRequest"
+        },
+        "response": {
+          "$ref": "#/$defs/CanvasViewDescribeResponse"
+        }
+      },
+      "required": [
+        "path",
+        "request",
         "response"
       ],
       "type": "object"
@@ -2450,6 +2820,16 @@
         },
         "view": {
           "type": "string"
+        },
+        "viewManifest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanvasViewManifest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -3131,6 +3511,224 @@
       ],
       "type": "object"
     },
+    "PromptBridgeRequest": {
+      "oneOf": [
+        {
+          "properties": {
+            "arguments": true,
+            "tool_name": {
+              "type": "string"
+            },
+            "type": {
+              "const": "permission",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "tool_name",
+            "arguments"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "body": {
+              "type": "string"
+            },
+            "options": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": {
+              "type": "string"
+            },
+            "type": {
+              "const": "ask",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "title",
+            "body",
+            "options"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "filter": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "const": "canvas_read_state",
+              "type": "string"
+            },
+            "view_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "action": {
+              "type": "string"
+            },
+            "args": {
+              "default": null
+            },
+            "type": {
+              "const": "canvas_invoke_action",
+              "type": "string"
+            },
+            "view_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "view_id",
+            "action"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "arguments": {
+              "default": null
+            },
+            "type": {
+              "const": "canvas_emit_view_draft",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "arguments": {
+              "default": null
+            },
+            "type": {
+              "const": "canvas_view_describe",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "PromptBridgeResponse": {
+      "oneOf": [
+        {
+          "properties": {
+            "decision": {
+              "type": "string"
+            },
+            "type": {
+              "const": "permission",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "decision"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "option": {
+              "type": "string"
+            },
+            "type": {
+              "const": "ask",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "option"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "canvas_read_state",
+              "type": "string"
+            },
+            "views": true
+          },
+          "required": [
+            "type",
+            "views"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "result": true,
+            "type": {
+              "const": "canvas_invoke_action",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "result"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "result": true,
+            "type": {
+              "const": "canvas_emit_view_draft",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "result"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "result": true,
+            "type": {
+              "const": "canvas_view_describe",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "result"
+          ],
+          "type": "object"
+        }
+      ]
+    },
     "PromptOption": {
       "properties": {
         "description": {
@@ -3258,6 +3856,16 @@
         },
         "source_hash": {
           "type": "string"
+        },
+        "viewManifest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CanvasViewManifest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       },
       "required": [
@@ -4040,6 +4648,9 @@
     "delete_canvas_pin": {
       "$ref": "#/$defs/DeleteCanvasPinRoute"
     },
+    "delete_canvas_view": {
+      "$ref": "#/$defs/DeleteCanvasViewRoute"
+    },
     "delete_cron": {
       "$ref": "#/$defs/DeleteCronRoute"
     },
@@ -4124,6 +4735,9 @@
     "post_canvas_view_build": {
       "$ref": "#/$defs/PostCanvasViewBuildRoute"
     },
+    "post_canvas_view_describe": {
+      "$ref": "#/$defs/PostCanvasViewDescribeRoute"
+    },
     "post_canvas_view_save": {
       "$ref": "#/$defs/PostCanvasViewSaveRoute"
     },
@@ -4175,6 +4789,12 @@
     "post_view_unregister": {
       "$ref": "#/$defs/PostViewUnregisterRoute"
     },
+    "prompt_bridge_request": {
+      "$ref": "#/$defs/PromptBridgeRequest"
+    },
+    "prompt_bridge_response": {
+      "$ref": "#/$defs/PromptBridgeResponse"
+    },
     "prompt_request_frame": {
       "$ref": "#/$defs/PromptRequestFrame"
     },
@@ -4218,6 +4838,7 @@
     "post_canvas_view_save",
     "get_canvas_views",
     "get_canvas_view",
+    "delete_canvas_view",
     "get_canvas_view_source",
     "post_canvas_view_build",
     "get_canvas_view_bundle",
@@ -4226,8 +4847,11 @@
     "delete_canvas_pin",
     "get_canvas_state",
     "put_canvas_state",
+    "post_canvas_view_describe",
     "get_canvas_project_data",
     "canvas_emit_view_draft_tool",
+    "prompt_bridge_request",
+    "prompt_bridge_response",
     "get_messages",
     "get_stream",
     "prompt_request_frame",

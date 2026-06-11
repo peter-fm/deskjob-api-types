@@ -134,6 +134,7 @@ export type ApiStreamFrame =
       timestamp?: number | null;
       turn_id: string;
       type: "view_draft_ready";
+      viewManifest?: CanvasViewManifest | null;
       [k: string]: unknown;
     }
   | {
@@ -357,6 +358,48 @@ export type UserId = number;
 export type ApprovalDecision = "approve" | "decline";
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasDurableViewTarget".
+ */
+export type CanvasDurableViewTarget =
+  | {
+      kind: "pin";
+      slot?: string;
+      [k: string]: unknown;
+    }
+  | {
+      kind: "saved";
+      slot?: string;
+      view: string;
+      [k: string]: unknown;
+    }
+  | {
+      draft_id?: string;
+      kind: "draft";
+      slot?: string;
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasResolvedDurableView".
+ */
+export type CanvasResolvedDurableView =
+  | {
+      author: string;
+      kind: "saved";
+      name: string;
+      slot: string;
+      view: string;
+      [k: string]: unknown;
+    }
+  | {
+      draft_id: string;
+      kind: "draft";
+      slot: string;
+      view: string;
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "EngineSelection".
  */
 export type EngineSelection = "codex" | "opus" | "claude";
@@ -367,6 +410,88 @@ export type EngineSelection = "codex" | "opus" | "claude";
 export type MessageAttachmentStatus = "pending" | "attached";
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PromptBridgeRequest".
+ */
+export type PromptBridgeRequest =
+  | {
+      arguments: unknown;
+      tool_name: string;
+      type: "permission";
+      [k: string]: unknown;
+    }
+  | {
+      body: string;
+      options: string[];
+      title: string;
+      type: "ask";
+      [k: string]: unknown;
+    }
+  | {
+      filter?: string | null;
+      type: "canvas_read_state";
+      view_id?: string | null;
+      [k: string]: unknown;
+    }
+  | {
+      action: string;
+      args?: {
+        [k: string]: unknown;
+      };
+      type: "canvas_invoke_action";
+      view_id: string;
+      [k: string]: unknown;
+    }
+  | {
+      arguments?: {
+        [k: string]: unknown;
+      };
+      type: "canvas_emit_view_draft";
+      [k: string]: unknown;
+    }
+  | {
+      arguments?: {
+        [k: string]: unknown;
+      };
+      type: "canvas_view_describe";
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PromptBridgeResponse".
+ */
+export type PromptBridgeResponse =
+  | {
+      decision: string;
+      type: "permission";
+      [k: string]: unknown;
+    }
+  | {
+      option: string;
+      type: "ask";
+      [k: string]: unknown;
+    }
+  | {
+      type: "canvas_read_state";
+      views: unknown;
+      [k: string]: unknown;
+    }
+  | {
+      result: unknown;
+      type: "canvas_invoke_action";
+      [k: string]: unknown;
+    }
+  | {
+      result: unknown;
+      type: "canvas_emit_view_draft";
+      [k: string]: unknown;
+    }
+  | {
+      result: unknown;
+      type: "canvas_view_describe";
+      [k: string]: unknown;
+    };
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "BuildMode".
  */
 export type BuildMode = "preview" | "release";
@@ -375,6 +500,7 @@ export interface ApiTypes {
   canvas_emit_view_draft_tool: CanvasEmitViewDraftToolRoute;
   delete_canvas_draft: DeleteCanvasDraftRoute;
   delete_canvas_pin: DeleteCanvasPinRoute;
+  delete_canvas_view: DeleteCanvasViewRoute;
   delete_cron: DeleteCronRoute;
   delete_shell: DeleteShellRoute;
   get_canvas_draft: GetCanvasDraftRoute;
@@ -403,6 +529,7 @@ export interface ApiTypes {
   post_approval: PostApprovalRoute;
   post_canvas_pin: PostCanvasPinRoute;
   post_canvas_view_build: PostCanvasViewBuildRoute;
+  post_canvas_view_describe: PostCanvasViewDescribeRoute;
   post_canvas_view_save: PostCanvasViewSaveRoute;
   post_cron: PostCronRoute;
   post_effort: PostEffortRoute;
@@ -420,6 +547,8 @@ export interface ApiTypes {
   post_view_register: PostViewRegisterRoute;
   post_view_state: PostViewStateRoute;
   post_view_unregister: PostViewUnregisterRoute;
+  prompt_bridge_request: PromptBridgeRequest;
+  prompt_bridge_response: PromptBridgeResponse;
   prompt_request_frame: PromptRequestFrame;
   put_canvas_draft: PutCanvasDraftRoute;
   put_canvas_state: PutCanvasStateRoute;
@@ -467,6 +596,7 @@ export interface PutCanvasDraftResponse {
   draft_id: string;
   revision: number;
   source_hash: string;
+  viewManifest?: CanvasViewManifest | null;
   [k: string]: unknown;
 }
 /**
@@ -493,6 +623,43 @@ export interface CanvasBuildDiagnostic {
   message: string;
   severity: string;
   [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewManifest".
+ */
+export interface CanvasViewManifest {
+  actions: CanvasViewManifestAction[];
+  purpose: string;
+  schemaVersion: number;
+  state: CanvasViewManifestState[];
+  summary?: string | null;
+  title?: string | null;
+  usage?: string | null;
+  version?: string | null;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewManifestAction".
+ */
+export interface CanvasViewManifestAction {
+  args: {
+    [k: string]: unknown;
+  };
+  description: string;
+  example?: {
+    [k: string]: unknown;
+  } | null;
+  name: string;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewManifestState".
+ */
+export interface CanvasViewManifestState {
+  description: string;
+  key: string;
+  type: string;
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
@@ -544,6 +711,23 @@ export interface PostCanvasPinResponse {
 export interface CanvasPinEntry {
   slot: string;
   view: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "DeleteCanvasViewRoute".
+ */
+export interface DeleteCanvasViewRoute {
+  path: CanvasViewPath;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewPath".
+ */
+export interface CanvasViewPath {
+  author: string;
+  name: string;
   [k: string]: unknown;
 }
 /**
@@ -632,6 +816,7 @@ export interface GetCanvasDraftResponse {
   source?: CanvasSource | null;
   source_hash: string;
   updated_at: string;
+  viewManifest?: CanvasViewManifest | null;
   [k: string]: unknown;
 }
 /**
@@ -758,20 +943,12 @@ export interface GetCanvasViewRoute {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
- * via the `definition` "CanvasViewPath".
- */
-export interface CanvasViewPath {
-  author: string;
-  name: string;
-  [k: string]: unknown;
-}
-/**
- * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetCanvasViewResponse".
  */
 export interface GetCanvasViewResponse {
   manifest: unknown;
   view: CanvasViewEntry;
+  viewManifest?: CanvasViewManifest | null;
   [k: string]: unknown;
 }
 /**
@@ -1331,6 +1508,52 @@ export interface PostCanvasViewBuildResponse {
   manifest?: unknown;
   source_hash: string;
   view: string;
+  viewManifest?: CanvasViewManifest | null;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "PostCanvasViewDescribeRoute".
+ */
+export interface PostCanvasViewDescribeRoute {
+  path: ProjectPath;
+  request: CanvasViewDescribeRequest;
+  response: CanvasViewDescribeResponse;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewDescribeRequest".
+ */
+export interface CanvasViewDescribeRequest {
+  target: CanvasDurableViewTarget;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasViewDescribeResponse".
+ */
+export interface CanvasViewDescribeResponse {
+  bundleHash?: string | null;
+  capabilities: unknown;
+  project: string;
+  resolved: CanvasResolvedDurableView;
+  sourceHash: string;
+  state: CanvasDurableStateRef[];
+  target: CanvasDurableViewTarget;
+  viewManifest: CanvasViewManifest;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CanvasDurableStateRef".
+ */
+export interface CanvasDurableStateRef {
+  description: string;
+  key: string;
+  slot: string;
+  type: string;
+  view: string;
   [k: string]: unknown;
 }
 /**
@@ -1369,6 +1592,7 @@ export interface PostCanvasViewSaveResponse {
   pinned: boolean;
   source_hash: string;
   view: string;
+  viewManifest?: CanvasViewManifest | null;
   [k: string]: unknown;
 }
 /**
