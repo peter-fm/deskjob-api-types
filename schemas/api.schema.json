@@ -199,8 +199,22 @@
             "created_at": {
               "type": "string"
             },
+            "group_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "id": {
               "type": "string"
+            },
+            "index": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
             },
             "options": {
               "items": {
@@ -218,6 +232,14 @@
             },
             "title": {
               "type": "string"
+            },
+            "total": {
+              "format": "uint32",
+              "minimum": 0,
+              "type": [
+                "integer",
+                "null"
+              ]
             },
             "turn_id": {
               "type": "string"
@@ -406,6 +428,94 @@
             "key",
             "revision",
             "updated_at"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "changes": {
+              "items": {
+                "$ref": "#/$defs/ProjectFileChange"
+              },
+              "type": "array"
+            },
+            "full_refresh": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "generated_at": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "project": {
+              "type": "string"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "const": "project_files_changed",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "project",
+            "changes"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "channel_id": {
+              "examples": [
+                "public:default",
+                "dm:agent:pete"
+              ],
+              "pattern": "^(public:default|dm:agent:[A-Za-z0-9._-]+)$",
+              "type": "string"
+            },
+            "event": {
+              "$ref": "#/$defs/CompactionStatusEvent"
+            },
+            "project": {
+              "type": "string"
+            },
+            "seq": {
+              "format": "uint64",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "timestamp": {
+              "description": "Epoch milliseconds since the Unix epoch for the status frame.",
+              "format": "int64",
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "turn_id": {
+              "type": "string"
+            },
+            "type": {
+              "const": "compaction_status",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "seq",
+            "project",
+            "channel_id",
+            "turn_id",
+            "event"
           ],
           "type": "object"
         }
@@ -1106,6 +1216,48 @@
         "channels"
       ],
       "type": "object"
+    },
+    "CompactionStatusEvent": {
+      "oneOf": [
+        {
+          "properties": {
+            "error": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "phase": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "running": {
+              "type": "boolean"
+            },
+            "session_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "trigger": {
+              "type": "string"
+            },
+            "type": {
+              "const": "compaction_status",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "running",
+            "trigger"
+          ],
+          "type": "object"
+        }
+      ]
     },
     "CronDeletePath": {
       "properties": {
@@ -3444,6 +3596,29 @@
       ],
       "type": "object"
     },
+    "ProjectFileChange": {
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ProjectFileChangeKind"
+        },
+        "path": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "kind"
+      ],
+      "type": "object"
+    },
+    "ProjectFileChangeKind": {
+      "enum": [
+        "created",
+        "deleted",
+        "modified"
+      ],
+      "type": "string"
+    },
     "ProjectPath": {
       "properties": {
         "project": {
@@ -3769,8 +3944,22 @@
         "created_at": {
           "type": "string"
         },
+        "group_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "id": {
           "type": "string"
+        },
+        "index": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "options": {
           "items": {
@@ -3788,6 +3977,14 @@
         },
         "title": {
           "type": "string"
+        },
+        "total": {
+          "format": "uint32",
+          "minimum": 0,
+          "type": [
+            "integer",
+            "null"
+          ]
         },
         "turn_id": {
           "type": "string"

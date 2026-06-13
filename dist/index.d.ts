@@ -94,11 +94,14 @@ export type ApiStreamFrame =
       body: string;
       channel_id: string;
       created_at: string;
+      group_id?: string | null;
       id: string;
+      index?: number | null;
       options: PromptOption[];
       project: string;
       seq: number;
       title: string;
+      total?: number | null;
       turn_id: string;
       type: "prompt_request";
       [k: string]: unknown;
@@ -145,6 +148,28 @@ export type ApiStreamFrame =
       type: "canvas_state_changed";
       updated_at: string;
       view: string;
+      [k: string]: unknown;
+    }
+  | {
+      changes: ProjectFileChange[];
+      full_refresh?: boolean | null;
+      generated_at?: string | null;
+      project: string;
+      reason?: string | null;
+      type: "project_files_changed";
+      [k: string]: unknown;
+    }
+  | {
+      channel_id: string;
+      event: CompactionStatusEvent;
+      project: string;
+      seq: number;
+      /**
+       * Epoch milliseconds since the Unix epoch for the status frame.
+       */
+      timestamp?: number | null;
+      turn_id: string;
+      type: "compaction_status";
       [k: string]: unknown;
     };
 /**
@@ -277,6 +302,24 @@ export type TranscriptEntry =
  */
 export type ReplayGapEvent = {
   type: "replay_gap";
+  [k: string]: unknown;
+};
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ProjectFileChangeKind".
+ */
+export type ProjectFileChangeKind = "created" | "deleted" | "modified";
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "CompactionStatusEvent".
+ */
+export type CompactionStatusEvent = {
+  error?: string | null;
+  phase?: string | null;
+  running: boolean;
+  session_id?: string | null;
+  trigger: string;
+  type: "compaction_status";
   [k: string]: unknown;
 };
 /**
@@ -1330,6 +1373,15 @@ export interface ViewBuildStatus {
 }
 /**
  * This interface was referenced by `ApiTypes`'s JSON-Schema
+ * via the `definition` "ProjectFileChange".
+ */
+export interface ProjectFileChange {
+  kind: ProjectFileChangeKind;
+  path: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `ApiTypes`'s JSON-Schema
  * via the `definition` "GetModelRoute".
  */
 export interface GetModelRoute {
@@ -2005,11 +2057,14 @@ export interface PromptRequestFrame {
   body: string;
   channel_id: string;
   created_at: string;
+  group_id?: string | null;
   id: string;
+  index?: number | null;
   options: PromptOption[];
   project: string;
   seq: number;
   title: string;
+  total?: number | null;
   turn_id: string;
   type: string;
   [k: string]: unknown;
